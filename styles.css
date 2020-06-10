@@ -2,4 +2,9 @@ canvas {
     width: 300px;
     height: 300px;
     border: 1px solid red;
+    
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
