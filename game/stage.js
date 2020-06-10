@@ -11,7 +11,7 @@ class Stage {
     }
 
     draw() {
-        this._stageAdapter.drawPlayers()
+        this._stageAdapter.draw()
     }
 }
 

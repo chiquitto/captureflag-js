@@ -12,9 +12,10 @@ class CanvasStageAdapter {
         this._game = game
     }
 
-    drawPlayers() {
+    draw() {
+        this.ctx.clearRect(0, 0, this._game.size.width, this._game.size.height);
+
         for (let player of this._game.players) {
-            console.log(player.position, player.size)
             this.ctx.fillStyle = player.color; 
             this.ctx.fillRect(player.position.x, player.position.y, player.size.width, player.size.height)
         }

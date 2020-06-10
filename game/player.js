@@ -1,17 +1,25 @@
 import createPosition from "./position.js"
 import {randomInteger} from "./util.js"
 import Size from "./size.js"
+import {MoveAction} from "./action-move.js";
 
 function createPlayer(game) {
-    let player = new Player(game)
-
-    return player
+    return new Player(game)
 }
 
 class Player {
     constructor(color) {
         this.color = color
         this.size = new Size(10, 10)
+        this._id = Math.random()
+    }
+
+    get game() {
+        return this._game
+    }
+
+    get id() {
+        return this._id
     }
 
     get position() {
@@ -24,6 +32,10 @@ class Player {
 
     set position(position) {
         this._position = position
+    }
+
+    do(action) {
+        action.do(this)
     }
 
     randomPosition() {

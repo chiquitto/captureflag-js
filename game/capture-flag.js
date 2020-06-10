@@ -2,11 +2,11 @@ import createCanvasStageAdapter from "./canvas-stage-adapter.js"
 import createPlayer from "./player.js"
 import Size from "./size.js"
 import createStage from "./stage.js"
-import createPosition from "./position.js"
+import createKeyboardInputListener from "./keyboard-input-listener.js";
 
 class CaptureFlag {
     constructor() {
-        this._size = new Size(50, 50)
+        this._size = new Size(100, 100)
     }
 
     get players() {
@@ -28,12 +28,18 @@ class CaptureFlag {
         this._stage = createStage(this, stageAdapter)
     }
 
+    playerDo(action) {
+        action.do()
+        this.draw()
+    }
+
     draw() {
         this._stage.draw()
     }
 
     start() {
         this.startPlayerPositions()
+        this.startInputListener()
 
         this.draw()
     }
@@ -59,6 +65,10 @@ class CaptureFlag {
                 i++
             }
         }
+    }
+
+    startInputListener() {
+        createKeyboardInputListener(this)
     }
 
     /**
