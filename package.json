@@ -1,0 +1,19 @@
+{
+  "name": "captureflag-vanillajs",
+  "version": "1.0.0",
+  "description": "Capture the flag game in Vanilla JS",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "serve": "^11.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "serve"
+  },
+  "author": "Alisson Chiquitto <chiquitto@gmail.com>",
+  "license": "ISC"
+}
