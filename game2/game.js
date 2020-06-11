@@ -14,6 +14,7 @@ class Game {
     this._flags = []
     this._players = []
     this._shapes = []
+    this._inputs = []
 
     this.width = 50
     this.height = 50
@@ -29,6 +30,11 @@ class Game {
 
   addDisplayConsole() {
     this._display.push(createDisplayConsoleAdapter(this))
+  }
+
+  addInput(playerNo, input) {
+    input.player = this._players[playerNo]
+    // this._inputs.push(this._inputs)
   }
 
   addPlayer(color) {
