@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Capture the flag</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+<canvas id="stage1" width="50" height="50"></canvas>
+<canvas id="stage2" width="50" height="50"></canvas>
+
+<script type="module">
+  import createGame from './game2/game.js';
+
+  let game = createGame()
+  game.addPlayer('red')
+  game.addPlayer('blue')
+  game.addDisplayCanvas(document.getElementById('stage1'))
+  game.addDisplayCanvas(document.getElementById('stage2'))
+  game.addDisplayConsole()
+  game.start()
+
+  console.log(game)
+</script>
+</body>
+
+</html>
