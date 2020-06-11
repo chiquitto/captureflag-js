@@ -3,10 +3,16 @@ import createPlayer from "./player.js"
 import Size from "./size.js"
 import createStage from "./stage.js"
 import createKeyboardInputListener from "./keyboard-input-listener.js";
+import createFlag from "./flag.js";
 
 class CaptureFlag {
+
     constructor() {
-        this._size = new Size(100, 100)
+        this._size = new Size(50, 50)
+    }
+
+    get flags() {
+        return this._flags
     }
 
     get players() {
@@ -39,9 +45,31 @@ class CaptureFlag {
 
     start() {
         this.startPlayerPositions()
+        this.startFlags()
         this.startInputListener()
 
         this.draw()
+    }
+
+    startFlags() {
+        this._flags = []
+        this.addFlag()
+    }
+
+    addFlag() {
+        this._flags.push(createFlag(this))
+    }
+
+    removeFlag(flag) {
+        for (let i = 0; i < this._flags.length; i++) {
+            this._flags.splice(i, 1)
+        }
+    }
+
+    playerHitFlag(player, flag) {
+        this.removeFlag(flag)
+        this.addFlag()
+        player.score++
     }
 
     startPlayerPositions() {

@@ -30,7 +30,14 @@ class MoveAction extends Action {
             }
 
             if (game.collisionDetection(this.player, player)) {
-                this.rollback()
+                return this.rollback()
+            }
+        }
+
+        for (let flag of game.flags) {
+            if (game.collisionDetection(this.player, flag)) {
+                game.playerHitFlag(this.player, flag)
+                break;
             }
         }
     }
