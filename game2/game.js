@@ -43,6 +43,10 @@ class Game {
     this._shapes.push(player.shape)
   }
 
+  doAction(action) {
+
+  }
+
   draw() {
     for (let display of this._display) {
       display.draw()

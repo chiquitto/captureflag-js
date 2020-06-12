@@ -9,6 +9,8 @@ export default class Input {
 
   triggerLeft() {
     console.log('left', this._player)
+
+    
   }
 
   triggerRight() {
