@@ -1,4 +1,5 @@
 import Action from "./Action.js"
+import {PlayerShape} from "../shapes/PlayerShape.js";
 
 export default class MoveAction extends Action {
 
@@ -7,15 +8,18 @@ export default class MoveAction extends Action {
 
   /**
    *
+   * @param {Stage} stage
+   * @param {Shape[]} shapes
    * @param {Player} player
    */
-  apply({player}) {
+  apply(stage, shapes, player) {
     this.#player = player
 
     this.backup()
     this.subApply(player)
-    if (!this.testResult()) {
+    if (!this.testResult(stage, shapes)) {
       this.rollback()
+      throw new Error('Invalid position')
     }
   }
 
@@ -35,9 +39,31 @@ export default class MoveAction extends Action {
     throw new Error('MoveAction.subApply not implemented')
   }
 
-  testResult() {
-    let isOK = true
+  /**
+   *
+   * @param {Stage} stage
+   * @param {Shape[]} shapes
+   * @returns {boolean}
+   */
+  testResult(stage, shapes) {
+    const shapePlayer = this.#player.shape
 
-    return isOK
+    if (!stage.isContained(shapePlayer)) {
+      return false
+    }
+
+    for (let shape of shapes) {
+      if (!(shape instanceof PlayerShape)) {
+        continue
+      }
+      if (shapePlayer.equals(shape)) {
+        continue
+      }
+
+      if (shapePlayer.detectCollision(shape)) {
+        return false
+      }
+    }
+    return true
   }
 }

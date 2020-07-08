@@ -18,12 +18,20 @@ export default class Shape {
     return this.#x
   }
 
+  get xEnd() {
+    return this.#x + this.#width
+  }
+
   set x(value) {
     this.#x = value
   }
 
   get y() {
     return this.#y
+  }
+
+  get yEnd() {
+    return this.#y + this.#height
   }
 
   set y(value) {

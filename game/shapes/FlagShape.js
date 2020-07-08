@@ -1,6 +1,6 @@
 import Shape from "./Shape.js";
 
-class FlagShape extends Shape {
+export class FlagShape extends Shape {
 
 }
 

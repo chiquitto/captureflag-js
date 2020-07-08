@@ -14,6 +14,18 @@ class Stage {
     this.#width = width
     this.#height = height
   }
+
+  /**
+   *
+   * @param {Shape} shape
+   * @returns {boolean} true if Shape is contained in Stage
+   */
+  isContained(shape) {
+    return (shape.x >= 0)
+      && (shape.y >= 0)
+      && (shape.xEnd <= this.#width)
+      && (shape.yEnd <= this.#height)
+  }
 }
 
 export default function createStage(width, height) {

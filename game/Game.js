@@ -3,7 +3,7 @@ import {randomInteger} from "./util.js";
 import createStage from "./Stage.js";
 import createCanvasDisplay from "./display/CanvasDisplay.js";
 import createPlayerShape from "./shapes/PlayerShape.js";
-import createFlagShape from "./shapes/FlagShape.js";
+import createFlagShape, {FlagShape} from "./shapes/FlagShape.js";
 import createConsoleDisplay from "./display/ConsoleDisplay.js";
 import createFlag from "./Flag.js";
 
@@ -74,9 +74,10 @@ class Game {
     const p = Promise.resolve(opts)
       .then(this.runTestFlags())
       .then(this.runPlayerAction())
-      // .then(v => console.log(v))
+      .then(this.runTestFlagCapture())
       .then(() => this.draw())
       .then(this.runDelay())
+      .catch(console.error)
       .then(() => this.nextTurn())
   }
 
@@ -84,7 +85,7 @@ class Game {
     return chainValues => {
       return this.#input.captureAction()
         .then((action) => {
-          action.apply(chainValues)
+          action.apply(this.#stage, this.#shapes, chainValues.player)
           return chainValues
         })
     }
@@ -97,6 +98,25 @@ class Game {
           resolve(input)
         }, 0)
       })
+    }
+  }
+
+  runTestFlagCapture() {
+    return input => {
+      const playerShape = input.player.shape
+
+      for (let shape of this.#shapes) {
+        if (!(shape instanceof FlagShape)) {
+          continue
+        }
+
+        if (playerShape.detectCollision(shape)) {
+          input.player.score++
+          console.log('Score', input.player.score)
+        }
+      }
+
+      return input
     }
   }
 
