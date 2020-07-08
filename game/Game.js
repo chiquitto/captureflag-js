@@ -65,14 +65,16 @@ class Game {
   }
 
   nextTurn() {
+    const playerNumber = this.playerTurnRotate();
+
     const opts = {
-      playerNumber: this.playerTurnRotate()
+      player: this.#players[playerNumber]
     }
 
     const p = Promise.resolve(opts)
       .then(this.runTestFlags())
       .then(this.runPlayerAction())
-      .then(console.log)
+      // .then(v => console.log(v))
       .then(() => this.draw())
       .then(this.runDelay())
       .then(() => this.nextTurn())
@@ -82,7 +84,7 @@ class Game {
     return chainValues => {
       return this.#input.captureAction()
         .then((action) => {
-          chainValues.action = action
+          action.apply(chainValues)
           return chainValues
         })
     }

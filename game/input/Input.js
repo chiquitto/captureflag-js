@@ -1,3 +1,8 @@
+import MoveUpAction from "../action/MoveUpAction.js";
+import MoveLeftAction from "../action/MoveLeftAction.js";
+import MoveRightAction from "../action/MoveRightAction.js";
+import MoveDownAction from "../action/MoveDownAction.js";
+
 export default class Input {
 
   #promiseResolve
@@ -22,19 +27,19 @@ export default class Input {
   }
 
   triggerLeft() {
-    this.triggerAction('left')
+    this.triggerAction(new MoveLeftAction())
   }
 
   triggerRight() {
-    this.triggerAction('right')
+    this.triggerAction(new MoveRightAction())
   }
 
   triggerUp() {
-    this.triggerAction('up')
+    this.triggerAction(new MoveUpAction())
   }
 
   triggerDown() {
-    this.triggerAction('down')
+    this.triggerAction(new MoveDownAction())
   }
 
 }
