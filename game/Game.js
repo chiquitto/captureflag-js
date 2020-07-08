@@ -12,6 +12,8 @@ class Game {
   #displays = []
   #flags = []
   #players = []
+  #playerTurn = 0
+  #input
 
   #stage
   #stageWidth = 20
@@ -62,7 +64,59 @@ class Game {
     }
   }
 
+  nextTurn() {
+    const opts = {
+      playerNumber: this.playerTurnRotate()
+    }
+
+    const p = Promise.resolve(opts)
+      .then(this.runTestFlags())
+      .then(this.runPlayerAction())
+      .then(console.log)
+      .then(() => this.draw())
+      .then(this.runDelay())
+      .then(() => this.nextTurn())
+  }
+
+  runPlayerAction() {
+    return chainValues => {
+      return this.#input.captureAction()
+        .then((action) => {
+          chainValues.action = action
+          return chainValues
+        })
+    }
+  }
+
+  runDelay() {
+    return input => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(input)
+        }, 0)
+      })
+    }
+  }
+
+  runTestFlags() {
+    return (input) => {
+      if (this.#flags.length == 0) {
+        this.addFlag()
+      }
+      return input
+    }
+  }
+
+  playerTurnRotate() {
+    if (this.#playerTurn >= this.#players.length) {
+      this.#playerTurn = 0
+    }
+    return this.#playerTurn++
+  }
+
   preparePlayers() {
+    this.#playerTurn = 0
+
     for (let player of this.#players) {
       player.score = 0
       do {
@@ -82,6 +136,16 @@ class Game {
 
   run() {
     this.draw()
+
+    this.nextTurn()
+  }
+
+  /**
+   *
+   * @param {Input} value
+   */
+  setInput(value) {
+    this.#input = value
   }
 
   /**
@@ -107,7 +171,9 @@ class Game {
     this.prepareStage()
     this.preparePlayers()
 
+    this.#flags = []
     this.addFlag()
+
     this.run()
   }
 
