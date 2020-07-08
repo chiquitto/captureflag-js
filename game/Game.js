@@ -3,11 +3,14 @@ import {randomInteger} from "./util.js";
 import createStage from "./Stage.js";
 import createCanvasDisplay from "./display/CanvasDisplay.js";
 import createPlayerShape from "./shapes/PlayerShape.js";
+import createFlagShape from "./shapes/FlagShape.js";
 import createConsoleDisplay from "./display/ConsoleDisplay.js";
+import createFlag from "./Flag.js";
 
 class Game {
   #shapes = []
   #displays = []
+  #flags = []
   #players = []
 
   #stage
@@ -26,9 +29,20 @@ class Game {
     this.#displays.push(display)
   }
 
+  addFlag() {
+    const flag = createFlag()
+    flag.shape = createFlagShape(flag.id, 0, 0, 1, 1, 'green')
+    do {
+      this.randomPosition(flag.shape)
+    } while (this.shapeCollisionCounter(flag.shape).length > 0)
+
+    this.#flags.push(flag)
+    this.#shapes.push(flag.shape)
+  }
+
   addPlayer(color) {
     const player = createPlayer(color)
-    player.shape = createPlayerShape(player.id, 0, 0, 2, 2, color)
+    player.shape = createPlayerShape(player.id, 0, 0, 2, 2, player.color)
 
     this.#players.push(player)
     this.#shapes.push(player.shape)
@@ -92,6 +106,8 @@ class Game {
   start() {
     this.prepareStage()
     this.preparePlayers()
+
+    this.addFlag()
     this.run()
   }
 

@@ -9,6 +9,10 @@ class Player {
     this.#color = color
   }
 
+  get color() {
+    return this.#color
+  }
+
   get id() {
     return this.#id
   }
