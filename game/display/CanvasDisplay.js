@@ -58,7 +58,6 @@ class CanvasDisplay extends Display {
    * @param {Polygon} polygon
    */
   drawPolygon(color, polygon) {
-    console.log(color, polygon)
     this.#ctx.fillStyle = color;
     this.#ctx.fillRect(polygon.x, polygon.y, polygon.width, polygon.height)
   }

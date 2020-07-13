@@ -6,15 +6,28 @@ import MoveDownAction from "../action/MoveDownAction.js";
 export default class Input {
 
   #promiseResolve
+  #publicData
 
   /**
    *
-   * @returns {Promise<Action>}
+   * @param {Object} publicData
+   * @param {number} publicData.playerNumber
+   * @returns {(Action|Promise<Action>)}
    */
-  captureAction() {
+  captureAction(publicData) {
+    this.#publicData = publicData
+
     return new Promise((resolve, reject) => {
       this.#promiseResolve = resolve
     })
+  }
+
+  /**
+   *
+   * @returns {Object}
+   */
+  get publicData() {
+    return this.#publicData
   }
 
   triggerAction(action) {
@@ -24,6 +37,27 @@ export default class Input {
 
     this.#promiseResolve(action)
     this.#promiseResolve = null
+  }
+
+  /**
+   *
+   * @param {String} action
+   */
+  triggerActionString(action) {
+    switch (action) {
+      case 'UP':
+        this.triggerUp()
+        break
+      case 'DOWN':
+        this.triggerDown()
+        break
+      case 'LEFT':
+        this.triggerLeft()
+        break
+      case 'RIGHT':
+        this.triggerRight()
+        break
+    }
   }
 
   triggerLeft() {

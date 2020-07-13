@@ -74,7 +74,8 @@ class Game {
     const playerNumber = this.playerTurnRotate()
 
     const opts = {
-      player: this.#players[playerNumber]
+      player: this.#players[playerNumber],
+      playerNumber
     }
 
     const p = Promise.resolve(opts)
@@ -90,7 +91,9 @@ class Game {
   runPlayerAction() {
     return chainValues => {
 
-      const publicData = {}
+      const publicData = {
+        playerNumber: chainValues.playerNumber,
+      }
 
       return this.#input.captureAction(publicData)
         .then((action) => {
@@ -138,7 +141,7 @@ class Game {
   }
 
   runTestFlags() {
-    return (input) => {
+    return input => {
       if (this.#flags.length == 0) {
         this.addFlag()
       }

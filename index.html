@@ -35,13 +35,18 @@
 
 <script type="module">
   import createGame from './game/Game.js';
-  import createDomClickInput from "./game/input/DomInput.js";
+  // import createDomClickInput from "./game/input/DomInput.js";
+  import createDomQueueInput from "./game/input/QueueInput.js";
 
   let game = createGame()
   game.addPlayer('red')
   game.addPlayer('blue')
-  game.setInput(createDomClickInput('player0Left', 'player0Right', 'player0Up', 'player0Down'))
-  // game.addInput(1, createDomInput('player1Left', 'player1Right', 'player1Up', 'player1Down'))
+  // game.setInput(createDomClickInput('player0Left', 'player0Right', 'player0Up', 'player0Down'))
+  game.setInput(createDomQueueInput(
+    document,
+    ['UP', 'DOWN', 'LEFT', 'RIGHT', 'UP'],
+    ['LEFT', 'RIGHT', 'UP', 'DOWN', 'LEFT'],
+  ))
   game.addCanvasDisplay(document.getElementById('stage1'))
   // game.addConsoleDisplay()
 
