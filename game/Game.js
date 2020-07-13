@@ -1,11 +1,11 @@
-import Polygon from "./model/Polygon.js";
-import createPlayer from "./model/Player.js";
-import {randomInteger} from "./util.js";
-import createStage from "./model/Stage.js";
-import createCanvasDisplay from "./display/CanvasDisplay.js";
-import createConsoleDisplay from "./display/ConsoleDisplay.js";
-import createFlag from "./model/Flag.js";
-import createRectangle from "./model/Rectangle.js";
+import Polygon from "./model/Polygon.js"
+import createPlayer from "./model/Player.js"
+import {randomInteger} from "./util.js"
+import createStage from "./model/Stage.js"
+import createCanvasDisplay from "./display/CanvasDisplay.js"
+import createConsoleDisplay from "./display/ConsoleDisplay.js"
+import createFlag from "./model/Flag.js"
+import createRectangle from "./model/Rectangle.js"
 
 class Game {
   #displays = []
@@ -39,7 +39,7 @@ class Game {
 
     do {
       this.randomPosition(flag.polygon)
-    } while (this.shapeCollisionCounter(flag.polygon).length > 0)
+    } while (this.collisionCounter(flag).length > 0)
 
     this.#flags.push(flag)
   }
@@ -71,7 +71,7 @@ class Game {
     }
     this.#canNextTurn = false
 
-    const playerNumber = this.playerTurnRotate();
+    const playerNumber = this.playerTurnRotate()
 
     const opts = {
       player: this.#players[playerNumber]
@@ -120,20 +120,18 @@ class Game {
 
   runTestFlagCapture() {
     return input => {
-      return input
+      const player = input.player
 
-      /*const playerShape = input.player.shape
-
-      for (let shape of this.#shapes) {
-        if (!(shape instanceof FlagShape)) {
-          continue
-        }
-
-        if (playerShape.detectCollision(shape)) {
-          input.player.score++
+      for (let flag of this.#flags) {
+        if (player.polygon.detectCollision(flag.polygon)) {
+          player.score++
           console.log('Score', input.player.score)
+
+          this.removeFlag(flag)
+          this.addFlag()
+          break
         }
-      }*/
+      }
 
       return input
     }
@@ -162,7 +160,7 @@ class Game {
       player.score = 0
       do {
         this.randomPosition(player.polygon)
-      } while (this.shapeCollisionCounter(player.polygon).length > 0)
+      } while (this.collisionCounter(player).length > 0)
     }
   }
 
@@ -200,20 +198,32 @@ class Game {
 
   /**
    *
-   * @param {Polygon} polygon
-   * @returns {Polygon[]}
+   * @param {Flag|Player} test
+   * @returns {Flag|Player[]}
    */
-  shapeCollisionCounter(polygon) {
+  collisionCounter(test) {
     let r = []
-    /*for (let aux of this.#shapes) {
-      if (polygon.equals(aux)) {
+
+    for (let player of this.#players) {
+      if (test.equals(player)) {
         continue
       }
 
-      if (polygon.detectCollision(aux)) {
-        r.push(aux)
+      if (test.polygon.detectCollision(player.polygon)) {
+        r.push(player)
       }
-    }*/
+    }
+
+    for (let flag of this.#flags) {
+      if (test.equals(flag)) {
+        continue
+      }
+
+      if (test.polygon.detectCollision(flag.polygon)) {
+        r.push(flag)
+      }
+    }
+
     return r
   }
 
@@ -227,7 +237,18 @@ class Game {
     this.run()
   }
 
-
+  /**
+   *
+   * @param {Flag} flag
+   */
+  removeFlag(flag) {
+    for (let i in this.#flags) {
+      if (flag.equals(this.#flags[i])) {
+        this.#flags.splice(i, 1)
+        return
+      }
+    }
+  }
 }
 
 /**

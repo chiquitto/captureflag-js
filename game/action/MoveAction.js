@@ -57,9 +57,9 @@ export default class MoveAction extends Action {
         continue
       }
 
-      //if (shapePlayer.detectCollision(aux)) {
-      //  return false
-      //}
+      if (player.polygon.detectCollision(aux.polygon)) {
+        return false
+      }
     }
     return true
   }

@@ -26,6 +26,15 @@ class Flag {
   get polygon() {
     return this.#polygon
   }
+
+  /**
+   *
+   * @param {Flag} other
+   * @returns {boolean}
+   */
+  equals(other) {
+    return this.#id == other.id
+  }
 }
 
 /**
