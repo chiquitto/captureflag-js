@@ -1,19 +1,6 @@
 export default class Display {
 
-  #stageWidth
-  #stageHeight
-
-  constructor(stageWidth, stageHeight) {
-    this.#stageWidth = stageWidth
-    this.#stageHeight = stageHeight
-  }
-
-  get stageWidth() {
-    return this.#stageWidth
-  }
-
-  get stageHeight() {
-    return this.#stageHeight
+  constructor() {
   }
 
   draw(options) {

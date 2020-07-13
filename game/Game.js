@@ -21,13 +21,22 @@ class Game {
   // control the game
   #canNextTurn
   #playerTurn = 0
+  #playerSize = 20
+  #flagSize = 10
+  #stepSize = 10
 
-  addCanvasDisplay(canvasElement) {
-    this.addDisplay(createCanvasDisplay(this.#stageWidth, this.#stageHeight, canvasElement))
+  /**
+   *
+   * @param {HTMLCanvasElement} canvasElement
+   * @param {number} canvasWidth
+   * @param {number} canvasHeight
+   */
+  addCanvasDisplay(canvasElement, canvasWidth, canvasHeight) {
+    this.addDisplay(createCanvasDisplay(canvasWidth, canvasHeight, canvasElement))
   }
 
   addConsoleDisplay() {
-    this.addDisplay(createConsoleDisplay(this.#stageWidth, this.#stageHeight))
+    this.addDisplay(createConsoleDisplay())
   }
 
   addDisplay(display) {
@@ -35,7 +44,12 @@ class Game {
   }
 
   addFlag() {
-    const flag = createFlag(createRectangle(0, 0, 1, 1))
+    const flag = createFlag(createRectangle(
+      0,
+      0,
+      this.#flagSize,
+      this.#flagSize
+    ))
 
     do {
       this.randomPosition(flag.polygon)
@@ -47,7 +61,12 @@ class Game {
   addPlayer(color) {
     const player = createPlayer(
       color,
-      createRectangle(0, 0, 2, 2),
+      createRectangle(
+        0,
+        0,
+        this.#playerSize,
+        this.#playerSize
+      ),
     )
 
     this.#players.push(player)
@@ -102,7 +121,10 @@ class Game {
             stage: this.#stage,
             player: chainValues.player,
             flags: this.#flags,
-            players: this.#players
+            players: this.#players,
+            options: {
+              stepSize: this.#stepSize
+            }
           }
 
           action.apply(privateData)
@@ -128,7 +150,6 @@ class Game {
       for (let flag of this.#flags) {
         if (player.polygon.detectCollision(flag.polygon)) {
           player.score++
-          console.log('Score', input.player.score)
 
           this.removeFlag(flag)
           this.addFlag()
@@ -147,6 +168,11 @@ class Game {
       }
       return input
     }
+  }
+
+  setStageSize(width, height) {
+    this.#stageWidth = width
+    this.#stageHeight = height
   }
 
   playerTurnRotate() {
@@ -176,8 +202,8 @@ class Game {
    * @param {Polygon|Rectangle} polygon
    */
   randomPosition(polygon) {
-    polygon.x = randomInteger(0, this.#stageWidth - polygon.width)
-    polygon.y = randomInteger(0, this.#stageHeight - polygon.height)
+    polygon.x = Math.round(randomInteger(0, this.#stageWidth - polygon.width) / this.#stepSize) * this.#stepSize
+    polygon.y = Math.round(randomInteger(0, this.#stageHeight - polygon.height) / this.#stepSize) * this.#stepSize
   }
 
   run() {

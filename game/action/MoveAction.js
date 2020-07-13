@@ -11,12 +11,15 @@ export default class MoveAction extends Action {
    * @param {Player} player
    * @param {Flag[]} flags
    * @param {Player[]} players
+   * @param {Object} options
+   * @param {number} options.stepSize
    */
-  apply({stage, player, flags, players}) {
+  apply({stage, player, flags, players, options}) {
     this.#player = player
 
     this.backup()
-    this.subApply(player)
+
+    this.subApply(player, options)
 
     if (!this.testResult(stage, player, players)) {
       this.rollback()
@@ -36,7 +39,13 @@ export default class MoveAction extends Action {
     this.#player.polygon.y = this.#backupData.y
   }
 
-  subApply() {
+  /**
+   *
+   * @param {Player} player
+   * @param {Object} options
+   * @param {number} options.stepSize
+   */
+  subApply(player, options) {
     throw new Error('MoveAction.subApply not implemented')
   }
 

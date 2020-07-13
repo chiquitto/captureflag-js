@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<canvas id="stage1" width="20" height="20"></canvas>
+<canvas id="stage1" width="200" height="250"></canvas>
 
 <table border="1" style="display: inline-block">
   <tr>
@@ -35,19 +35,21 @@
 
 <script type="module">
   import createGame from './game/Game.js';
-  // import createDomClickInput from "./game/input/DomInput.js";
+  import createDomClickInput from "./game/input/DomInput.js";
   import createDomQueueInput from "./game/input/QueueInput.js";
 
   let game = createGame()
   game.addPlayer('red')
   game.addPlayer('blue')
-  // game.setInput(createDomClickInput('player0Left', 'player0Right', 'player0Up', 'player0Down'))
-  game.setInput(createDomQueueInput(
+  game.setInput(createDomClickInput('player0Left', 'player0Right', 'player0Up', 'player0Down'))
+  /*game.setInput(createDomQueueInput(
     document,
     ['UP', 'DOWN', 'LEFT', 'RIGHT', 'UP'],
     ['LEFT', 'RIGHT', 'UP', 'DOWN', 'LEFT'],
-  ))
-  game.addCanvasDisplay(document.getElementById('stage1'))
+  ))*/
+
+  game.setStageSize(200, 200)
+  game.addCanvasDisplay(document.getElementById('stage1'), 200, 250)
   // game.addConsoleDisplay()
 
   game.start()

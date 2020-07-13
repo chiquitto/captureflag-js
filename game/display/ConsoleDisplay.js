@@ -14,6 +14,6 @@ class ConsoleDisplay extends TextDisplay {
 
 }
 
-export default function createConsoleDisplay(stageWidth, stageHeight) {
-  return new ConsoleDisplay(stageWidth, stageHeight);
+export default function createConsoleDisplay() {
+  return new ConsoleDisplay();
 }
