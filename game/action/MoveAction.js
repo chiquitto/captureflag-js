@@ -1,5 +1,4 @@
 import Action from "./Action.js"
-import {PlayerShape} from "../shapes/PlayerShape.js";
 
 export default class MoveAction extends Action {
 
@@ -9,15 +8,17 @@ export default class MoveAction extends Action {
   /**
    *
    * @param {Stage} stage
-   * @param {Shape[]} shapes
    * @param {Player} player
+   * @param {Flag[]} flags
+   * @param {Player[]} players
    */
-  apply(stage, shapes, player) {
+  apply({stage, player, flags, players}) {
     this.#player = player
 
     this.backup()
     this.subApply(player)
-    if (!this.testResult(stage, shapes)) {
+
+    if (!this.testResult(stage, player, players)) {
       this.rollback()
       throw new Error('Invalid position')
     }
@@ -25,14 +26,14 @@ export default class MoveAction extends Action {
 
   backup() {
     this.#backupData = {
-      x: this.#player.shape.x,
-      y: this.#player.shape.y
+      x: this.#player.polygon.x,
+      y: this.#player.polygon.y
     }
   }
 
   rollback() {
-    this.#player.shape.x = this.#backupData.x
-    this.#player.shape.y = this.#backupData.y
+    this.#player.polygon.x = this.#backupData.x
+    this.#player.polygon.y = this.#backupData.y
   }
 
   subApply() {
@@ -42,27 +43,23 @@ export default class MoveAction extends Action {
   /**
    *
    * @param {Stage} stage
-   * @param {Shape[]} shapes
+   * @param {Player} player
+   * @param {Player[]} players
    * @returns {boolean}
    */
-  testResult(stage, shapes) {
-    const shapePlayer = this.#player.shape
-
-    if (!stage.isContained(shapePlayer)) {
+  testResult(stage, player, players) {
+    if (!stage.isContained(player.polygon)) {
       return false
     }
 
-    for (let shape of shapes) {
-      if (!(shape instanceof PlayerShape)) {
-        continue
-      }
-      if (shapePlayer.equals(shape)) {
+    for (let aux of players) {
+      if (player.equals(aux)) {
         continue
       }
 
-      if (shapePlayer.detectCollision(shape)) {
-        return false
-      }
+      //if (shapePlayer.detectCollision(aux)) {
+      //  return false
+      //}
     }
     return true
   }

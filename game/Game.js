@@ -1,23 +1,26 @@
-import createPlayer from "./Player.js";
+import Polygon from "./model/Polygon.js";
+import createPlayer from "./model/Player.js";
 import {randomInteger} from "./util.js";
-import createStage from "./Stage.js";
+import createStage from "./model/Stage.js";
 import createCanvasDisplay from "./display/CanvasDisplay.js";
-import createPlayerShape from "./shapes/PlayerShape.js";
-import createFlagShape, {FlagShape} from "./shapes/FlagShape.js";
 import createConsoleDisplay from "./display/ConsoleDisplay.js";
-import createFlag from "./Flag.js";
+import createFlag from "./model/Flag.js";
+import createRectangle from "./model/Rectangle.js";
 
 class Game {
-  #shapes = []
   #displays = []
-  #flags = []
-  #players = []
-  #playerTurn = 0
   #input
 
+  // data
+  #flags = []
+  #players = []
   #stage
   #stageWidth = 20
   #stageHeight = 20
+
+  // control the game
+  #canNextTurn
+  #playerTurn = 0
 
   addCanvasDisplay(canvasElement) {
     this.addDisplay(createCanvasDisplay(this.#stageWidth, this.#stageHeight, canvasElement))
@@ -32,31 +35,29 @@ class Game {
   }
 
   addFlag() {
-    const flag = createFlag()
-    flag.shape = createFlagShape(flag.id, 0, 0, 1, 1, 'green')
+    const flag = createFlag(createRectangle(0, 0, 1, 1))
+
     do {
-      this.randomPosition(flag.shape)
-    } while (this.shapeCollisionCounter(flag.shape).length > 0)
+      this.randomPosition(flag.polygon)
+    } while (this.shapeCollisionCounter(flag.polygon).length > 0)
 
     this.#flags.push(flag)
-    this.#shapes.push(flag.shape)
   }
 
   addPlayer(color) {
-    const player = createPlayer(color)
-    player.shape = createPlayerShape(player.id, 0, 0, 2, 2, player.color)
+    const player = createPlayer(
+      color,
+      createRectangle(0, 0, 2, 2),
+    )
 
     this.#players.push(player)
-    this.#shapes.push(player.shape)
-  }
-
-  addShape(shape) {
-    this.#shapes.push(shape)
   }
 
   draw() {
     const options = {
-      shapes: this.#shapes
+      stage: this.#stage,
+      players: this.#players,
+      flags: this.#flags
     }
 
     for (let display of this.#displays) {
@@ -65,6 +66,11 @@ class Game {
   }
 
   nextTurn() {
+    if (!this.#canNextTurn) {
+      return
+    }
+    this.#canNextTurn = false
+
     const playerNumber = this.playerTurnRotate();
 
     const opts = {
@@ -78,14 +84,25 @@ class Game {
       .then(() => this.draw())
       .then(this.runDelay())
       .catch(console.error)
-      .then(() => this.nextTurn())
+      .then(() => this.#canNextTurn = true)
   }
 
   runPlayerAction() {
     return chainValues => {
-      return this.#input.captureAction()
+
+      const publicData = {}
+
+      return this.#input.captureAction(publicData)
         .then((action) => {
-          action.apply(this.#stage, this.#shapes, chainValues.player)
+
+          const privateData = {
+            stage: this.#stage,
+            player: chainValues.player,
+            flags: this.#flags,
+            players: this.#players
+          }
+
+          action.apply(privateData)
           return chainValues
         })
     }
@@ -103,7 +120,9 @@ class Game {
 
   runTestFlagCapture() {
     return input => {
-      const playerShape = input.player.shape
+      return input
+
+      /*const playerShape = input.player.shape
 
       for (let shape of this.#shapes) {
         if (!(shape instanceof FlagShape)) {
@@ -114,7 +133,7 @@ class Game {
           input.player.score++
           console.log('Score', input.player.score)
         }
-      }
+      }*/
 
       return input
     }
@@ -142,8 +161,8 @@ class Game {
     for (let player of this.#players) {
       player.score = 0
       do {
-        this.randomPosition(player.shape)
-      } while (this.shapeCollisionCounter(player.shape).length > 0)
+        this.randomPosition(player.polygon)
+      } while (this.shapeCollisionCounter(player.polygon).length > 0)
     }
   }
 
@@ -151,15 +170,24 @@ class Game {
     this.#stage = createStage(this.#stageWidth, this.#stageHeight)
   }
 
-  randomPosition(shape) {
-    shape.x = randomInteger(0, this.#stage.width - shape.width)
-    shape.y = randomInteger(0, this.#stage.height - shape.height)
+  /**
+   *
+   * @param {Polygon|Rectangle} polygon
+   */
+  randomPosition(polygon) {
+    polygon.x = randomInteger(0, this.#stageWidth - polygon.width)
+    polygon.y = randomInteger(0, this.#stageHeight - polygon.height)
   }
 
   run() {
     this.draw()
 
-    this.nextTurn()
+    this.#canNextTurn = true
+
+    setInterval(() => {
+      this.nextTurn()
+    }, 100)
+
   }
 
   /**
@@ -172,20 +200,20 @@ class Game {
 
   /**
    *
-   * @param {Shape} shape
-   * @returns {Shape[]}
+   * @param {Polygon} polygon
+   * @returns {Polygon[]}
    */
-  shapeCollisionCounter(shape) {
+  shapeCollisionCounter(polygon) {
     let r = []
-    for (let aux of this.#shapes) {
-      if (shape.equals(aux)) {
+    /*for (let aux of this.#shapes) {
+      if (polygon.equals(aux)) {
         continue
       }
 
-      if (shape.detectCollision(aux)) {
+      if (polygon.detectCollision(aux)) {
         r.push(aux)
       }
-    }
+    }*/
     return r
   }
 

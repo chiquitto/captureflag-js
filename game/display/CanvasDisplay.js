@@ -1,4 +1,5 @@
 import Display from "./Display.js";
+import Polygon from "../model/Polygon.js";
 
 class CanvasDisplay extends Display {
 
@@ -17,29 +18,49 @@ class CanvasDisplay extends Display {
     this.#ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
   }
 
+  /**
+   *
+   * @param {Object} options
+   * @param {Stage} options.stage
+   * @param {Player[]} options.players
+   * @param {Flag[]} options.flags
+   */
   draw(options) {
     this.clear()
-    this.drawShapes(options.shapes)
+
+    this.drawPlayers(options.players)
+    this.drawFlags(options.flags)
   }
 
   /**
    *
-   * @param {Shape[]} shapes
+   * @param {Flag[]} flags
    */
-  drawShapes(shapes) {
-    for (let shape of shapes) {
-      this.drawShape(shape)
+  drawFlags(flags) {
+    for (let flag of flags) {
+      this.drawPolygon(flag.color, flag.polygon)
     }
   }
 
   /**
    *
-   * @param {Shape} shape
+   * @param {Player[]} players
    */
-  drawShape(shape) {
-    console.log(shape)
-    this.#ctx.fillStyle = shape.color;
-    this.#ctx.fillRect(shape.x, shape.y, shape.width, shape.height)
+  drawPlayers(players) {
+    for (let player of players) {
+      this.drawPolygon(player.color, player.polygon)
+    }
+  }
+
+  /**
+   *
+   * @param {String} color
+   * @param {Polygon} polygon
+   */
+  drawPolygon(color, polygon) {
+    console.log(color, polygon)
+    this.#ctx.fillStyle = color;
+    this.#ctx.fillRect(polygon.x, polygon.y, polygon.width, polygon.height)
   }
 }
 

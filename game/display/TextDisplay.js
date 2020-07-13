@@ -25,31 +25,29 @@ export default class TextDisplay extends Display {
 
   draw(options) {
     this.clear()
-    this.drawShapes(options.shapes)
+    // this.drawPolygons(options.shapes)
   }
 
   /**
    *
-   * @param {Shape[]} shapes
+   * @param {Polygon[]} polygons
    */
-  drawShapes(shapes) {
-    for (let shape of shapes) {
-      this.drawShape(shape)
-    }
+  drawPolygons(polygons) {
+
   }
 
   /**
    *
-   * @param {Shape} shape
+   * @param {Polygon} polygon
    */
-  drawShape(shape) {
-    let xmax = shape.x + shape.width
+  drawPolygon(polygon) {
+    /*let xmax = shape.x + shape.width
     let ymax = shape.y + shape.height
     for (let y = shape.y; y < ymax; y++) {
       for (let x = shape.x; x < xmax; x++) {
         this.#stringBuffer[y][x] = shape.color.substring(0, 1)
       }
-    }
+    }*/
   }
 
 }
