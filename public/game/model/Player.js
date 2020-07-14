@@ -1,4 +1,5 @@
 import Polygon from "./Polygon.js";
+import {randomString} from "../util.js";
 
 class Player {
   #id
@@ -7,7 +8,7 @@ class Player {
   #polygon
 
   constructor(color, polygon) {
-    this.#id = Math.random()
+    this.#id = randomString(32)
     this.#color = color
     this.#polygon = polygon
   }
