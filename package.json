@@ -12,7 +12,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start" : "serve"
+    "start": "serve"
   },
   "author": "Alisson Chiquitto <chiquitto@gmail.com>",
   "license": "ISC"

@@ -9,34 +9,53 @@
 </head>
 
 <body>
-    <canvas id="stage" width="50" height="50"></canvas>
+<canvas id="stage1" width="200" height="250"></canvas>
 
-    <table border="1">
-      <tr>
-        <td rowspan="2"><button id="player0Left">Esquerda</button></td>
-        <td><button id="player0Up">Cima</button></td>
-        <td rowspan="2"><button id="player0Right">Direita</button></td>
-      </tr>
-      <tr>
-        <td><button id="player0Down">Baixo</button></td>
-      </tr>
-    </table>
+<table border="1" style="display: inline-block">
+  <tr>
+    <td colspan="3">Red</td>
+  </tr>
+  <tr>
+    <td rowspan="2">
+      <button id="player0Left">Esquerda</button>
+    </td>
+    <td>
+      <button id="player0Up">Cima</button>
+    </td>
+    <td rowspan="2">
+      <button id="player0Right">Direita</button>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <button id="player0Down">Baixo</button>
+    </td>
+  </tr>
+</table>
 
-    <table border="1">
-      <tr>
-        <td rowspan="2"><button id="player1Left">Esquerda</button></td>
-        <td><button id="player1Up">Cima</button></td>
-        <td rowspan="2"><button id="player1Right">Direita</button></td>
-      </tr>
-      <tr>
-        <td><button id="player1Down">Baixo</button></td>
-      </tr>
-    </table>
+<script type="module">
+  import createGame from './game/Game.js';
+  import createDomClickInput from "./game/input/DomInput.js";
+  import createDomQueueInput from "./game/input/QueueInput.js";
 
-    <script type="module">
-    import createGame from './game/capture-flag.js';
-    createGame(document.getElementById('stage'));
-    </script>
+  let game = createGame()
+  game.addPlayer('red')
+  game.addPlayer('blue')
+  game.setInput(createDomClickInput('player0Left', 'player0Right', 'player0Up', 'player0Down'))
+  /*game.setInput(createDomQueueInput(
+    document,
+    ['UP', 'DOWN', 'LEFT', 'RIGHT', 'UP'],
+    ['LEFT', 'RIGHT', 'UP', 'DOWN', 'LEFT'],
+  ))*/
+
+  game.setStageSize(200, 200)
+  game.addCanvasDisplay(document.getElementById('stage1'), 200, 250)
+  // game.addConsoleDisplay()
+
+  game.start()
+
+  console.log(game)
+</script>
 </body>
 
 </html>

@@ -1,18 +1,6 @@
-import Input from "./input.js"
+import Input from "./Input.js";
 
-export default function createDomClickInput(idLeft, idRight, idUp, idDown) {
-  let input = new DomEventInput(idLeft, idRight, idUp, idDown)
-  input.addTriggerLeft('click', idLeft)
-  input.addTriggerRight('click', idRight)
-  input.addTriggerUp('click', idUp)
-  input.addTriggerDown('click', idDown)
-  return input
-}
-
-class DomEventInput extends Input {
-  constructor(idLeft, idRight, idUp, idDown) {
-    super()
-  }
+class DomInput extends Input {
 
   addTriggerLeft(eventType, idElement) {
     document.getElementById(idElement)
@@ -41,4 +29,22 @@ class DomEventInput extends Input {
         this.triggerDown()
       })
   }
+
+}
+
+/**
+ *
+ * @param {String} idLeft
+ * @param {String} idRight
+ * @param {String} idUp
+ * @param {String} idDown
+ * @returns {DomInput}
+ */
+export default function createDomClickInput(idLeft, idRight, idUp, idDown) {
+  let input = new DomInput(idLeft, idRight, idUp, idDown)
+  input.addTriggerLeft('click', idLeft)
+  input.addTriggerRight('click', idRight)
+  input.addTriggerUp('click', idUp)
+  input.addTriggerDown('click', idDown)
+  return input
 }
