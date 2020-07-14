@@ -1,1 +1,1 @@
-serve
+serve public
