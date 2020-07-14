@@ -17,6 +17,7 @@ class Game {
   #stage
   #stageWidth = 20
   #stageHeight = 20
+  #winner = null
 
   // control the game
   #canNextTurn
@@ -85,6 +86,10 @@ class Game {
   }
 
   nextTurn() {
+    if (this.isFinished()) {
+      return
+    }
+
     if (!this.#canNextTurn) {
       return
     }
@@ -150,6 +155,10 @@ class Game {
       for (let flag of this.#flags) {
         if (player.polygon.detectCollision(flag.polygon)) {
           player.score++
+
+          if (player.score >= 5) {
+            this.#winner = player
+          }
 
           this.removeFlag(flag)
           this.addFlag()
@@ -257,6 +266,8 @@ class Game {
   }
 
   start() {
+    this.#winner = null
+
     this.prepareStage()
     this.preparePlayers()
 
@@ -277,6 +288,20 @@ class Game {
         return
       }
     }
+  }
+
+  isFinished() {
+    if (this.#winner == null) {
+      return false
+    }
+
+    window.alert('O jogo acabou.')
+
+    if (window.confirm('Iniciar um novo jogo?')) {
+      this.start()
+    }
+
+    return true
   }
 }
 
