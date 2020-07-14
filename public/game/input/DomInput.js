@@ -1,6 +1,6 @@
-import Input from "./Input.js";
+import PromiseInput from "./PromiseInput.js";
 
-class DomInput extends Input {
+class DomInput extends PromiseInput {
 
   addTriggerLeft(eventType, idElement) {
     document.getElementById(idElement)

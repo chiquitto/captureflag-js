@@ -35,18 +35,25 @@
 
 <script type="module">
   import createGame from './game/Game.js';
-  import createDomClickInput from "./game/input/DomInput.js";
-  import createDomQueueInput from "./game/input/QueueInput.js";
+  // import createDomClickInput from "./game/input/DomInput.js";
+  // import createDomQueueInput from "./game/input/QueueInput.js";
+  import RandomRobot from "./robot/RandomRobot.js";
+  import StraightRobot from "./robot/StraightRobot.js";
+  import createRobotInput from "./game/input/RobotInput.js";
 
   let game = createGame()
   game.addPlayer('red')
   game.addPlayer('blue')
-  game.setInput(createDomClickInput('player0Left', 'player0Right', 'player0Up', 'player0Down'))
+  // game.setInput(createDomClickInput('player0Left', 'player0Right', 'player0Up', 'player0Down'))
   /*game.setInput(createDomQueueInput(
     document,
     ['UP', 'DOWN', 'LEFT', 'RIGHT', 'UP'],
     ['LEFT', 'RIGHT', 'UP', 'DOWN', 'LEFT'],
   ))*/
+
+  const randomRobot = new RandomRobot()
+  const straightRobot = new StraightRobot()
+  game.setInput(createRobotInput(randomRobot, straightRobot))
 
   game.setStageSize(200, 200)
   game.addCanvasDisplay(document.getElementById('stage1'), 200, 250)

@@ -6,6 +6,7 @@ import createCanvasDisplay from "./display/CanvasDisplay.js"
 import createConsoleDisplay from "./display/ConsoleDisplay.js"
 import createFlag from "./model/Flag.js"
 import createRectangle from "./model/Rectangle.js"
+import Action from "./action/Action.js";
 
 class Game {
   #displays = []
@@ -115,26 +116,50 @@ class Game {
   runPlayerAction() {
     return chainValues => {
 
-      const publicData = {
-        playerNumber: chainValues.playerNumber,
+      if (this.#input == null) {
+        throw new Error('Input isnt defined')
+        return chainValues
       }
 
-      return this.#input.captureAction(publicData)
-        .then((action) => {
+      const publicData = {
+        game: {
+          stepSize: this.#stepSize
+        },
+        player: {
+          number: chainValues.playerNumber,
+          id: chainValues.player.id
+        },
+        players: this.#players.map(player => {
+          const r = player.polygon.toPlainObject()
+          r.id = player.id
 
-          const privateData = {
-            stage: this.#stage,
-            player: chainValues.player,
-            flags: this.#flags,
-            players: this.#players,
-            options: {
-              stepSize: this.#stepSize
-            }
+          return r
+        }),
+        flags: this.#flags.map(flag => flag.polygon.toPlainObject())
+      }
+
+      let action = this.#input.captureAction(publicData)
+      if (!(action instanceof Promise)) {
+        action = Promise.resolve(action)
+      }
+
+      return action.then((action) => {
+
+        const privateData = {
+          stage: this.#stage,
+          player: chainValues.player,
+          flags: this.#flags,
+          players: this.#players,
+          options: {
+            stepSize: this.#stepSize
           }
+        }
 
+        if (action instanceof Action) {
           action.apply(privateData)
-          return chainValues
-        })
+        }
+        return chainValues
+      })
     }
   }
 
@@ -156,7 +181,7 @@ class Game {
         if (player.polygon.detectCollision(flag.polygon)) {
           player.score++
 
-          if (player.score >= 5) {
+          if (player.score >= 10) {
             this.#winner = player
           }
 
@@ -222,7 +247,7 @@ class Game {
 
     setInterval(() => {
       this.nextTurn()
-    }, 100)
+    }, 250)
 
   }
 
@@ -296,11 +321,6 @@ class Game {
     }
 
     window.alert('O jogo acabou.')
-
-    if (window.confirm('Iniciar um novo jogo?')) {
-      this.start()
-    }
-
     return true
   }
 }
