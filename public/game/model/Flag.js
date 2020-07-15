@@ -1,4 +1,5 @@
 import Polygon from "./Polygon.js";
+import {randomString} from "../util.js";
 
 /**
  * @property {String} color
@@ -8,11 +9,14 @@ class Flag {
   #id
   #color
   #polygon
+  #points
 
-  constructor(polygon) {
-    this.#id = Math.random()
-    this.#color = 'green'
+  constructor(points, color, polygon) {
+    this.#points = points
     this.#polygon = polygon
+    this.#color = color
+
+    this.#id = randomString(32)
   }
 
   get color() {
@@ -21,6 +25,10 @@ class Flag {
 
   get id() {
     return this.#id
+  }
+
+  get points() {
+    return this.#points
   }
 
   get polygon() {
@@ -39,9 +47,11 @@ class Flag {
 
 /**
  *
+ * @param {Number} points
+ * @param {String} color
  * @param {Polygon|Rectangle} polygon
  * @returns {Flag}
  */
-export default function createFlag(polygon) {
-  return new Flag(polygon)
+export default function createFlag(points, color, polygon) {
+  return new Flag(points, color, polygon)
 }

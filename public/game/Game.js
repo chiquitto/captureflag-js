@@ -1,6 +1,6 @@
 import Polygon from "./model/Polygon.js"
 import createPlayer from "./model/Player.js"
-import {randomInteger} from "./util.js"
+import {randomInteger, randomValue} from "./util.js"
 import createStage from "./model/Stage.js"
 import createCanvasDisplay from "./display/CanvasDisplay.js"
 import createConsoleDisplay from "./display/ConsoleDisplay.js"
@@ -26,6 +26,8 @@ class Game {
   #playerSize = 20
   #flagSize = 10
   #stepSize = 10
+  #maxFlags = 5
+  #interval
 
   /**
    *
@@ -46,7 +48,11 @@ class Game {
   }
 
   addFlag() {
-    const flag = createFlag(createRectangle(
+    const points = randomValue([1,1,1,1,2,2,3])
+    const color = (points == 1) ? '#00FF00'
+      : (points == 2) ? '#FF00FF' : '#000000'
+
+    const flag = createFlag(points, color, createRectangle(
       0,
       0,
       this.#flagSize,
@@ -62,6 +68,7 @@ class Game {
 
   addPlayer(color) {
     const player = createPlayer(
+      this.#players.length,
       color,
       createRectangle(
         0,
@@ -121,24 +128,7 @@ class Game {
         return chainValues
       }
 
-      const publicData = {
-        game: {
-          stepSize: this.#stepSize
-        },
-        player: {
-          number: chainValues.playerNumber,
-          id: chainValues.player.id
-        },
-        players: this.#players.map(player => {
-          const r = player.polygon.toPlainObject()
-          r.id = player.id
-
-          return r
-        }),
-        flags: this.#flags.map(flag => flag.polygon.toPlainObject())
-      }
-
-      let action = this.#input.captureAction(publicData)
+      let action = this.#input.captureAction(this.publicData(chainValues))
       if (!(action instanceof Promise)) {
         action = Promise.resolve(action)
       }
@@ -179,9 +169,9 @@ class Game {
 
       for (let flag of this.#flags) {
         if (player.polygon.detectCollision(flag.polygon)) {
-          player.score++
+          player.score += flag.points
 
-          if (player.score >= 10) {
+          if (player.score >= 5) {
             this.#winner = player
           }
 
@@ -245,7 +235,7 @@ class Game {
 
     this.#canNextTurn = true
 
-    setInterval(() => {
+    this.#interval = setInterval(() => {
       this.nextTurn()
     }, 250)
 
@@ -297,7 +287,7 @@ class Game {
     this.preparePlayers()
 
     this.#flags = []
-    this.addFlag()
+    this.initFlags()
 
     this.run()
   }
@@ -320,8 +310,47 @@ class Game {
       return false
     }
 
+    clearInterval(this.#interval)
+    this.#interval = null
+
     window.alert('O jogo acabou.')
     return true
+  }
+
+  publicData(args) {
+    const playerData = player => {
+      return {
+        id: player.id,
+        number: player.number,
+        ...player.polygon.toPlainObject()
+      }
+    }
+    const flagData = flag => {
+      return {
+        id: flag.id,
+        points: flag.points,
+        ...flag.polygon.toPlainObject()
+      }
+    }
+
+    const publicData = {
+      game: {
+        stepSize: this.#stepSize
+      },
+      player: playerData(args.player),
+      enemies: this.#players
+        .filter(player => !player.equals(args.player))
+        .map(playerData),
+      flags: this.#flags.map(flagData)
+    }
+    console.log(publicData)
+    return publicData
+  }
+
+  initFlags() {
+    for (let i = 0; i < this.#maxFlags; i++) {
+      this.addFlag()
+    }
   }
 }
 

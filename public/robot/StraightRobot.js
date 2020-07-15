@@ -7,8 +7,7 @@ export default class StraightRobot {
 
   action(publicData) {
     const flag = publicData.flags[0]
-    const playerNumber = publicData.player.number
-    const player = publicData.players[playerNumber]
+    const player = publicData.player
 
     let flagDistance = this.calcFlagDistance(player, flag)
 
