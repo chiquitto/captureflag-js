@@ -3,16 +3,30 @@ import {randomString} from "../util.js";
 
 class Player {
   #id
-  #score = 0
+  #number
+  #score
   #color
   #polygon
 
-  constructor(color, polygon) {
-    this.#id = randomString(32)
+  /**
+   *
+   * @param {number} number
+   * @param {String} color
+   * @param {Polygon|Rectangle} polygon
+   */
+  constructor(number, color, polygon) {
+    this.#number = number
     this.#color = color
     this.#polygon = polygon
+
+    this.#id = randomString(32)
+    this.#score = 0
   }
 
+  /**
+   *
+   * @returns {string}
+   */
   get color() {
     return this.#color
   }
@@ -26,8 +40,20 @@ class Player {
     return this.#id == other.id
   }
 
+  /**
+   *
+   * @returns {string}
+   */
   get id() {
     return this.#id
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  get number() {
+    return this.#number
   }
 
   /**
@@ -38,10 +64,18 @@ class Player {
     return this.#polygon
   }
 
+  /**
+   *
+   * @returns {number}
+   */
   get score() {
     return this.#score
   }
 
+  /**
+   *
+   * @param {number} score
+   */
   set score(score) {
     this.#score = score
   }
@@ -50,10 +84,11 @@ class Player {
 
 /**
  *
+ * @param {number} number
  * @param {String} color
  * @param {Polygon|Rectangle} polygon
  * @returns {Player}
  */
-export default function createPlayer(color, polygon) {
-  return new Player(color, polygon)
+export default function createPlayer(number, color, polygon) {
+  return new Player(number, color, polygon)
 }

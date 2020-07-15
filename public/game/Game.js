@@ -26,6 +26,8 @@ class Game {
   #playerSize = 20
   #flagSize = 10
   #stepSize = 10
+  #maxFlags = 5
+  #interval
 
   /**
    *
@@ -62,6 +64,7 @@ class Game {
 
   addPlayer(color) {
     const player = createPlayer(
+      this.#players.length,
       color,
       createRectangle(
         0,
@@ -121,24 +124,7 @@ class Game {
         return chainValues
       }
 
-      const publicData = {
-        game: {
-          stepSize: this.#stepSize
-        },
-        player: {
-          number: chainValues.playerNumber,
-          id: chainValues.player.id
-        },
-        players: this.#players.map(player => {
-          const r = player.polygon.toPlainObject()
-          r.id = player.id
-
-          return r
-        }),
-        flags: this.#flags.map(flag => flag.polygon.toPlainObject())
-      }
-
-      let action = this.#input.captureAction(publicData)
+      let action = this.#input.captureAction(this.publicData(chainValues))
       if (!(action instanceof Promise)) {
         action = Promise.resolve(action)
       }
@@ -181,7 +167,7 @@ class Game {
         if (player.polygon.detectCollision(flag.polygon)) {
           player.score++
 
-          if (player.score >= 10) {
+          if (player.score >= 5) {
             this.#winner = player
           }
 
@@ -245,7 +231,7 @@ class Game {
 
     this.#canNextTurn = true
 
-    setInterval(() => {
+    this.#interval = setInterval(() => {
       this.nextTurn()
     }, 250)
 
@@ -297,7 +283,7 @@ class Game {
     this.preparePlayers()
 
     this.#flags = []
-    this.addFlag()
+    this.initFlags()
 
     this.run()
   }
@@ -320,8 +306,40 @@ class Game {
       return false
     }
 
+    clearInterval(this.#interval)
+    this.#interval = null
+
     window.alert('O jogo acabou.')
     return true
+  }
+
+  publicData(args) {
+    const playerPublicData = (player) => {
+      return {
+        id: player.id,
+        number: player.number,
+        ...player.polygon.toPlainObject()
+      }
+    }
+
+    const publicData = {
+      game: {
+        stepSize: this.#stepSize
+      },
+      player: playerPublicData(args.player),
+      enemies: this.#players
+        .filter(player => !player.equals(args.player))
+        .map(playerPublicData),
+      flags: this.#flags.map(flag => flag.polygon.toPlainObject())
+    }
+    console.log(publicData)
+    return publicData
+  }
+
+  initFlags() {
+    for (let i = 0; i < this.#maxFlags; i++) {
+      this.addFlag()
+    }
   }
 }
 
