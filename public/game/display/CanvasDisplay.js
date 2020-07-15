@@ -16,7 +16,9 @@ class CanvasDisplay extends Display {
 
   /**
    *
-   * @param canvasElement
+   * @param {number} canvasWidth
+   * @param {number} canvasHeight
+   * @param {HTMLCanvasElement} canvasElement
    */
   constructor(canvasWidth, canvasHeight, canvasElement) {
     super();
@@ -85,7 +87,7 @@ class CanvasDisplay extends Display {
 
   /**
    *
-   * @param {String} color
+   * @param {string} color
    * @param {Polygon} polygon
    */
   drawPolygon(color, polygon) {
@@ -114,7 +116,7 @@ class CanvasDisplay extends Display {
       const player = players[i]
       const playerNumber = parseInt(i, 10) + 1
 
-      this.#ctx.fillText(`Player ${playerNumber}: ${player.score}`, 10, yPos)
+      this.#ctx.fillText(`Player ${playerNumber}: ${player.score} (Special: ${player.specialPoints})`, 10, yPos)
 
       yPos += 15
     }

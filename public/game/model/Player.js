@@ -1,5 +1,6 @@
-import Polygon from "./Polygon.js";
-import {randomString} from "../util.js";
+import Polygon from "./Polygon.js"
+import {randomString} from "../util.js"
+import GameConfig from "../GameConfig.js";
 
 class Player {
   #id
@@ -7,6 +8,7 @@ class Player {
   #score
   #color
   #polygon
+  #specialPoints
 
   /**
    *
@@ -21,6 +23,7 @@ class Player {
 
     this.#id = randomString(32)
     this.#score = 0
+    this.#specialPoints = 0
   }
 
   /**
@@ -80,12 +83,24 @@ class Player {
     this.#score = score
   }
 
+  /**
+   *
+   * @returns {number}
+   */
+  get specialPoints() {
+    return this.#specialPoints
+  }
+
+  set specialPoints(value) {
+    this.#specialPoints = Math.min(value, GameConfig.playerMaxSpecialPoints)
+  }
+
 }
 
 /**
  *
  * @param {number} number
- * @param {String} color
+ * @param {string} color
  * @param {Polygon|Rectangle} polygon
  * @returns {Player}
  */

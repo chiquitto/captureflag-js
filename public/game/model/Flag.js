@@ -2,7 +2,7 @@ import Polygon from "./Polygon.js";
 import {randomString} from "../util.js";
 
 /**
- * @property {String} color
+ * @property {string} color
  * @property {Polygon} polygon
  */
 class Flag {
@@ -47,11 +47,12 @@ class Flag {
 
 /**
  *
- * @param {Number} points
- * @param {String} color
+ * @param {number} points
+ * @param {string} color
  * @param {Polygon|Rectangle} polygon
  * @returns {Flag}
  */
 export default function createFlag(points, color, polygon) {
   return new Flag(points, color, polygon)
 }
+export {Flag}

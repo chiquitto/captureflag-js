@@ -7,6 +7,8 @@ import createConsoleDisplay from "./display/ConsoleDisplay.js"
 import createFlag from "./model/Flag.js"
 import createRectangle from "./model/Rectangle.js"
 import Action from "./action/Action.js";
+import createSpecialFlag, {SpecialFlag} from "./model/SpecialFlag.js";
+import GameConfig from "./GameConfig.js";
 
 class Game {
   #displays = []
@@ -28,6 +30,7 @@ class Game {
   #stepSize = 10
   #maxFlags = 5
   #interval
+  #maxSpecialPoints = 100
 
   /**
    *
@@ -48,22 +51,38 @@ class Game {
   }
 
   addFlag() {
-    const points = randomValue([1,1,1,1,2,2,3])
-    const color = (points == 1) ? '#00FF00'
-      : (points == 2) ? '#FF00FF' : '#000000'
 
-    const flag = createFlag(points, color, createRectangle(
-      0,
-      0,
-      this.#flagSize,
-      this.#flagSize
-    ))
+    const flag = (Math.random() < 0.1)
+      ? this.specialFlagGenerator() : this.flagGenerator()
+    console.log(flag)
 
     do {
       this.randomPosition(flag.polygon)
     } while (this.collisionCounter(flag).length > 0)
 
     this.#flags.push(flag)
+  }
+
+  flagGenerator() {
+    const points = randomValue([1, 1, 1, 1, 2, 2, 3])
+    const color = ['#00FF00', '#FF00FF', '#000000'][points - 1]
+
+    return createFlag(points, color, createRectangle(
+      0,
+      0,
+      this.#flagSize,
+      this.#flagSize
+    ))
+  }
+
+  specialFlagGenerator() {
+    const points = randomInteger(1, GameConfig.playerMaxSpecialPoints / 10) * 10
+    return createSpecialFlag(points, '#CCCCCC', createRectangle(
+      0,
+      0,
+      this.#flagSize,
+      this.#flagSize
+    ))
   }
 
   addPlayer(color) {
@@ -169,10 +188,14 @@ class Game {
 
       for (let flag of this.#flags) {
         if (player.polygon.detectCollision(flag.polygon)) {
-          player.score += flag.points
+          if (flag instanceof SpecialFlag) {
+            player.specialPoints += flag.points
+          } else {
+            player.score += flag.points
+          }
 
           if (player.score >= 5) {
-            this.#winner = player
+            //  this.#winner = player
           }
 
           this.removeFlag(flag)
@@ -343,7 +366,7 @@ class Game {
         .map(playerData),
       flags: this.#flags.map(flagData)
     }
-    console.log(publicData)
+    // console.log(publicData)
     return publicData
   }
 
@@ -352,6 +375,7 @@ class Game {
       this.addFlag()
     }
   }
+
 }
 
 /**
