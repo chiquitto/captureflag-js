@@ -12,4 +12,13 @@ function randomString(length) {
     .join('')
 }
 
-export {randomInteger, randomChar, randomString}
+/**
+ *
+ @param {*[]} values
+ * @returns {*}
+ */
+function randomValue(values) {
+  return values[randomInteger(0, values.length)]
+}
+
+export {randomInteger, randomChar, randomString, randomValue}

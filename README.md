@@ -12,5 +12,5 @@ A game to capture the flags before the enemy. You can use a robot to control you
   - [ ] Remove a flag
   - [ ] Convert a flag point to special point
 - [x] Multiple flags
-- [ ] Flags with different points (colors)
+- [x] Flags with different points (colors)
 
