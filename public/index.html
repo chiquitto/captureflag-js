@@ -41,6 +41,9 @@
   import FirstFlagRobot from "./robot/FirstFlagRobot.js";
   import createRobotInput from "./game/input/RobotInput.js";
   import createPromiseRobotInput from "./game/input/PromiseRobotInput.js";
+  import CloserFlagRobot from "./robot/CloserFlagRobot.js";
+  import HighestValueRobot from "./robot/HighestValueRobot.js"
+  // import SpecialValueRobot from "./robot/SpecialValueRobot.js";
 
   let game = createGame()
   game.addPlayer('red')
@@ -52,10 +55,13 @@
     ['LEFT', 'RIGHT', 'UP', 'DOWN', 'LEFT'],
   ))*/
 
-  const randomRobot = new RandomRobot()
-  const firstFlagRobot = new FirstFlagRobot()
-  game.setInput(createRobotInput([randomRobot, firstFlagRobot]))
-  // game.setInput(createPromiseRobotInput(document, [randomRobot, firstFlagRobot]))
+  // const randomRobot = new RandomRobot()
+  // const firstFlagRobot = new FirstFlagRobot()
+  const closerFlagRobot = new CloserFlagRobot()
+  const highestValueRobot = new HighestValueRobot()
+  // const specialValueRobot = new SpecialValueRobot()
+  game.setInput(createRobotInput([closerFlagRobot, highestValueRobot]))
+  // game.setInput(createPromiseRobotInput(document, [closerFlagRobot, highestValueRobot]))
 
   game.setStageSize(15, 15)
   game.addCanvasDisplay(document.getElementById('stage1'), 200, 250)

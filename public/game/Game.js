@@ -9,6 +9,7 @@ import createRectangle from "./model/Rectangle.js"
 import Action from "./action/Action.js";
 import createSpecialFlag, {SpecialFlag} from "./model/SpecialFlag.js";
 import GameConfig from "./GameConfig.js";
+import ActionFactory from "./action/ActionFactory.js";
 
 class Game {
   #displays = []
@@ -149,7 +150,7 @@ class Game {
         action = Promise.resolve(action)
       }
 
-      return action.then((action) => {
+      return action.then((actionArgs) => {
 
         const privateData = {
           stage: this.#stage,
@@ -161,9 +162,11 @@ class Game {
           }
         }
 
-        if (action instanceof Action) {
+        let action = ActionFactory.factory(actionArgs)
+        if (action !== null) {
           action.apply(privateData)
         }
+
         return chainValues
       })
     }
@@ -345,6 +348,7 @@ class Game {
       return {
         id: player.id,
         number: player.number,
+        name: player.color,
         ...player.polygon.toPlainObject()
       }
     }
@@ -353,7 +357,7 @@ class Game {
         id: flag.id,
         points: flag.points,
         type: (flag instanceof SpecialFlag) ? 'SpecialFlag' : 'PointFlag',
-        ...flag.polygon.toPlainObject()
+        polygon: flag.polygon.toPlainObject()
       }
     }
 

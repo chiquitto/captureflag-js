@@ -17,8 +17,9 @@ A game to capture the flags before the enemy. You can use a robot to control you
 - [x] Capture two flags in one movement
 - [ ] Add obstacles in stage
 - [x] Divide the stage into blocks instead of pixels
-- [ ] Create examples robot input
-  - [ ] Closer flag
-  - [ ] Find flag highest value
-  - [x] First flag
+- [x] Create examples of input robots
+  - [x] Closer flag - Search for the nearest flag
+  - [x] Find flag highest value - Search for the flag with the most points
+  - [x] First flag - Search for the first flag
+  - [x] Special flag - Give preference to special flags
   

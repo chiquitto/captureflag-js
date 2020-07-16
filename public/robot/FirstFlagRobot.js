@@ -1,37 +1,38 @@
-import MoveRightAction from "../game/action/MoveRightAction.js";
-import MoveLeftAction from "../game/action/MoveLeftAction.js";
-import MoveDownAction from "../game/action/MoveDownAction.js";
-import MoveUpAction from "../game/action/MoveUpAction.js";
-
 export default class FirstFlagRobot {
 
   action(publicData) {
     const flag = publicData.flags[0]
     const player = publicData.player
 
-    let flagDistance = this.calcFlagDistance(player, flag)
-    const diffX = -(player.width - publicData.game.stepSize)
-    const diffY = -(player.height - publicData.game.stepSize)
+    flag.playerDistance = this.calcFlagDistance(player, flag)
 
-    if (flagDistance.x > 0) {
-      return new MoveLeftAction()
-    } else if (flagDistance.x < diffX) {
-      return new MoveRightAction()
-    } else if (flagDistance.y > 0) {
-      return new MoveUpAction()
-    } else if (flagDistance.y < diffY) {
-      return new MoveDownAction()
-    }
-
-    return null
+    return this.goto(player, flag, publicData)
   }
 
   calcFlagDistance(player, flag) {
-    const x = player.x - flag.x
-    const y = player.y - flag.y
+    const x = player.x - flag.polygon.x
+    const y = player.y - flag.polygon.y
     const total = Math.abs(x) + Math.abs(y)
 
     return {x, y, total}
   }
 
+  goto(player, flag) {
+    // console.log(`Player ${player.name} goto ${flag.pos}`)
+    const diffX = -(player.width - flag.polygon.width)
+    const diffY = -(player.height - flag.polygon.height)
+
+    let type = null
+    if (flag.playerDistance.x > 0) {
+      type = 'LEFT'
+    } else if (flag.playerDistance.x < diffX) {
+      type = 'RIGHT'
+    } else if (flag.playerDistance.y > 0) {
+      type = 'UP'
+    } else if (flag.playerDistance.y < diffY) {
+      type = 'DOWN'
+    }
+
+    return {type}
+  }
 }
