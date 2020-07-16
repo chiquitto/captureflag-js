@@ -7,7 +7,7 @@ class QueueInput extends Input {
 
   /**
    *
-   * @param {[String[]]} playerQueue
+   * @param {[string[]]} playerQueue
    */
   constructor(playerQueue) {
     super()
@@ -32,7 +32,7 @@ class QueueInput extends Input {
 /**
  *
  * @param {HTMLElement} element
- * @param {...String[]} playerQueue
+ * @param {...string[]} playerQueue
  * @returns {QueueDomInput}
  */
 export default function createDomQueueInput(element, ...playerQueue) {

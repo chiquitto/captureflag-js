@@ -34,10 +34,10 @@ class DomInput extends PromiseInput {
 
 /**
  *
- * @param {String} idLeft
- * @param {String} idRight
- * @param {String} idUp
- * @param {String} idDown
+ * @param {string} idLeft
+ * @param {string} idRight
+ * @param {string} idUp
+ * @param {string} idDown
  * @returns {DomInput}
  */
 export default function createDomClickInput(idLeft, idRight, idUp, idDown) {

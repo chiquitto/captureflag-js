@@ -33,7 +33,7 @@ export default class PromiseInput extends Input {
 
   /**
    *
-   * @param {String} action
+   * @param {string} action
    */
   triggerActionString(action) {
     switch (action) {

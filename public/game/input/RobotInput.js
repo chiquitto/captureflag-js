@@ -4,7 +4,7 @@ class RobotInput extends Input {
 
   #robots
 
-  constructor(...robots) {
+  constructor(robots) {
     super();
 
     this.#robots = robots
@@ -19,7 +19,7 @@ class RobotInput extends Input {
 
 }
 
-export default function createRobotInput(...robots) {
+export default function createRobotInput(robots) {
 
   // test robots
   for (let robot of robots) {
@@ -29,5 +29,5 @@ export default function createRobotInput(...robots) {
     }
   }
 
-  return new RobotInput(...robots)
+  return new RobotInput(robots)
 }

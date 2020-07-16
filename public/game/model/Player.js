@@ -13,7 +13,7 @@ class Player {
   /**
    *
    * @param {number} number
-   * @param {String} color
+   * @param {string} color
    * @param {Polygon|Rectangle} polygon
    */
   constructor(number, color, polygon) {

@@ -40,6 +40,7 @@
   import RandomRobot from "./robot/RandomRobot.js";
   import StraightRobot from "./robot/StraightRobot.js";
   import createRobotInput from "./game/input/RobotInput.js";
+  import createPromiseRobotInput from "./game/input/PromiseRobotInput.js";
 
   let game = createGame()
   game.addPlayer('red')
@@ -53,7 +54,8 @@
 
   const randomRobot = new RandomRobot()
   const straightRobot = new StraightRobot()
-  game.setInput(createRobotInput(randomRobot, straightRobot))
+  game.setInput(createRobotInput([randomRobot, straightRobot]))
+  // game.setInput(createPromiseRobotInput(document, [randomRobot, straightRobot]))
 
   game.setStageSize(200, 200)
   game.addCanvasDisplay(document.getElementById('stage1'), 200, 250)

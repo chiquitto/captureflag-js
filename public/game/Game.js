@@ -30,7 +30,6 @@ class Game {
   #stepSize = 10
   #maxFlags = 5
   #interval
-  #maxSpecialPoints = 100
 
   /**
    *
@@ -51,10 +50,8 @@ class Game {
   }
 
   addFlag() {
-
     const flag = (Math.random() < 0.1)
       ? this.specialFlagGenerator() : this.flagGenerator()
-    console.log(flag)
 
     do {
       this.randomPosition(flag.polygon)
@@ -186,7 +183,12 @@ class Game {
     return input => {
       const player = input.player
 
-      for (let flag of this.#flags) {
+      const flags2Remove = []
+      const length = this.#flags.length
+
+      for (let i = 0; i < length; i++) {
+        let flag = this.#flags[i]
+
         if (player.polygon.detectCollision(flag.polygon)) {
           if (flag instanceof SpecialFlag) {
             player.specialPoints += flag.points
@@ -198,10 +200,13 @@ class Game {
             //  this.#winner = player
           }
 
-          this.removeFlag(flag)
-          this.addFlag()
-          break
+          flags2Remove.push(i)
         }
+      }
+
+      for (let x = flags2Remove.length - 1; x >= 0; x--) {
+        this.removeFlag(flags2Remove[x])
+        this.addFlag()
       }
 
       return input
@@ -317,15 +322,10 @@ class Game {
 
   /**
    *
-   * @param {Flag} flag
+   * @param {number} pos
    */
-  removeFlag(flag) {
-    for (let i in this.#flags) {
-      if (flag.equals(this.#flags[i])) {
-        this.#flags.splice(i, 1)
-        return
-      }
-    }
+  removeFlag(pos) {
+    this.#flags.splice(pos, 1)
   }
 
   isFinished() {
@@ -352,6 +352,7 @@ class Game {
       return {
         id: flag.id,
         points: flag.points,
+        type: (flag instanceof SpecialFlag) ? 'SpecialFlag' : 'PointFlag',
         ...flag.polygon.toPlainObject()
       }
     }

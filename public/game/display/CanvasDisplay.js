@@ -70,8 +70,15 @@ class CanvasDisplay extends Display {
    * @param {Flag[]} flags
    */
   drawFlags(flags) {
-    for (let flag of flags) {
+    for (let i in flags) {
+      const flag = flags[i]
       this.drawPolygon(flag.color, flag.polygon)
+
+      this.#ctx.fillStyle = 'black'
+      this.#ctx.font = "14px Arial"
+      this.#ctx.fillText(`${i}`,
+        (flag.polygon.x * this.#stageRatio) + this.#stageX,
+        (flag.polygon.y * this.#stageRatio) + this.#stageY)
     }
   }
 
@@ -98,7 +105,7 @@ class CanvasDisplay extends Display {
       polygon.height * this.#stageRatio
     ]
 
-    this.#ctx.fillStyle = color;
+    this.#ctx.fillStyle = color
     this.#ctx.fillRect(...values)
   }
 
@@ -107,7 +114,7 @@ class CanvasDisplay extends Display {
    * @param {Player[]} players
    */
   drawScores(players) {
-    this.#ctx.fillStyle = 'black';
+    this.#ctx.fillStyle = 'black'
     this.#ctx.font = "14px Arial"
 
     let yPos = 15
