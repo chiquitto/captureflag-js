@@ -25,9 +25,8 @@ class Game {
   // control the game
   #canNextTurn
   #playerTurn = 0
-  #playerSize = 20
-  #flagSize = 10
-  #stepSize = 10
+  #playerSize = 2
+  #flagSize = 1
   #maxFlags = 5
   #interval
 
@@ -123,7 +122,8 @@ class Game {
 
     const opts = {
       player: this.#players[playerNumber],
-      playerNumber
+      playerNumber,
+      stepSize: 1
     }
 
     const p = Promise.resolve(opts)
@@ -131,7 +131,7 @@ class Game {
       .then(this.runPlayerAction())
       .then(this.runTestFlagCapture())
       .then(() => this.draw())
-      .then(this.runDelay())
+      // .then(this.runDelay())
       .catch(console.error)
       .then(() => this.#canNextTurn = true)
   }
@@ -144,7 +144,7 @@ class Game {
         return chainValues
       }
 
-      let action = this.#input.captureAction(this.publicData(chainValues))
+      let action = this.#input.captureAction(this.generatePublicData(chainValues))
       if (!(action instanceof Promise)) {
         action = Promise.resolve(action)
       }
@@ -157,7 +157,7 @@ class Game {
           flags: this.#flags,
           players: this.#players,
           options: {
-            stepSize: this.#stepSize
+            stepSize: chainValues.stepSize
           }
         }
 
@@ -254,8 +254,8 @@ class Game {
    * @param {Polygon|Rectangle} polygon
    */
   randomPosition(polygon) {
-    polygon.x = Math.round(randomInteger(0, this.#stageWidth - polygon.width) / this.#stepSize) * this.#stepSize
-    polygon.y = Math.round(randomInteger(0, this.#stageHeight - polygon.height) / this.#stepSize) * this.#stepSize
+    polygon.x = randomInteger(0, this.#stageWidth - polygon.width)
+    polygon.y = randomInteger(0, this.#stageHeight - polygon.height)
   }
 
   run() {
@@ -340,7 +340,7 @@ class Game {
     return true
   }
 
-  publicData(args) {
+  generatePublicData(args) {
     const playerData = player => {
       return {
         id: player.id,
@@ -359,7 +359,11 @@ class Game {
 
     const publicData = {
       game: {
-        stepSize: this.#stepSize
+        stepSize: args.stepSize
+      },
+      stage: {
+        width: this.#stageWidth,
+        height: this.#stageHeight
       },
       player: playerData(args.player),
       enemies: this.#players

@@ -38,7 +38,7 @@
   // import createDomClickInput from "./game/input/DomInput.js";
   // import createDomQueueInput from "./game/input/QueueInput.js";
   import RandomRobot from "./robot/RandomRobot.js";
-  import StraightRobot from "./robot/StraightRobot.js";
+  import FirstFlagRobot from "./robot/FirstFlagRobot.js";
   import createRobotInput from "./game/input/RobotInput.js";
   import createPromiseRobotInput from "./game/input/PromiseRobotInput.js";
 
@@ -53,11 +53,11 @@
   ))*/
 
   const randomRobot = new RandomRobot()
-  const straightRobot = new StraightRobot()
-  game.setInput(createRobotInput([randomRobot, straightRobot]))
-  // game.setInput(createPromiseRobotInput(document, [randomRobot, straightRobot]))
+  const firstFlagRobot = new FirstFlagRobot()
+  game.setInput(createRobotInput([randomRobot, firstFlagRobot]))
+  // game.setInput(createPromiseRobotInput(document, [randomRobot, firstFlagRobot]))
 
-  game.setStageSize(200, 200)
+  game.setStageSize(15, 15)
   game.addCanvasDisplay(document.getElementById('stage1'), 200, 250)
   // game.addConsoleDisplay()
 

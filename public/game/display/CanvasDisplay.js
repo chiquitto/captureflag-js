@@ -34,9 +34,14 @@ class CanvasDisplay extends Display {
     }
 
     this.#stageRatio = this.#canvasWidth / stage.width
-
-    this.#stageWidth = Math.floor(this.#canvasWidth * this.#stageRatio)
+    this.#stageWidth = Math.floor(stage.width * this.#stageRatio)
     this.#stageHeight = Math.floor(stage.height * this.#stageRatio)
+
+    if (this.#stageHeight > this.#canvasHeight) {
+      this.#stageRatio = this.#canvasHeight / stage.height
+      this.#stageWidth = Math.floor(stage.width * this.#stageRatio)
+      this.#stageHeight = Math.floor(stage.height * this.#stageRatio)
+    }
 
     this.#stageY = this.#canvasHeight - this.#stageHeight
     this.#stageX = 0
@@ -58,11 +63,11 @@ class CanvasDisplay extends Display {
   draw(options) {
     this.clear()
 
-    this.drawScores(options.players)
-
     this.drawStage(options.stage)
     this.drawPlayers(options.players)
     this.drawFlags(options.flags)
+
+    this.drawScores(options.players)
   }
 
   /**
@@ -142,6 +147,6 @@ class CanvasDisplay extends Display {
 
 }
 
-export default function createCanvasDisplay(stageWidth, stageHeight, canvasElement) {
-  return new CanvasDisplay(stageWidth, stageHeight, canvasElement)
+export default function createCanvasDisplay(canvasWidth, canvasHeight, canvasElement) {
+  return new CanvasDisplay(canvasWidth, canvasHeight, canvasElement)
 }
