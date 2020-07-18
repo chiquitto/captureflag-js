@@ -9,11 +9,11 @@ import createRectangle from "./model/Rectangle.js"
 import createSpecialFlag, {SpecialFlag} from "./model/SpecialFlag.js"
 import GameConfig from "./GameConfig.js"
 import ActionFactory from "./action/ActionFactory.js"
-import createInput, {Input} from "./input/Input.js";
+import createDispatcher, {Dispatcher} from "./dispatch/Dispatcher.js";
 
 class Game {
   #displays = []
-  #input
+  #dispatcher
 
   // data
   #flags = []
@@ -142,12 +142,12 @@ class Game {
   runPlayerAction() {
     return chainValues => {
 
-      if (this.#input == null) {
-        throw new Error('Input isnt defined')
+      if (this.#dispatcher == null) {
+        throw new Error('Dispatcher isnt defined')
         return chainValues
       }
 
-      let action = this.#input.captureAction(chainValues.player,
+      let action = this.#dispatcher.captureAction(chainValues.player,
         this.generatePublicData(chainValues))
 
       if (!(action instanceof Promise)) {
@@ -283,10 +283,10 @@ class Game {
 
   /**
    *
-   * @param {Input} value
+   * @param {Dispatcher} value
    */
-  setInput(value) {
-    this.#input = value
+  setDispatcher(value) {
+    this.#dispatcher = value
   }
 
   /**
@@ -396,8 +396,8 @@ class Game {
   }
 
   prepareInputs() {
-    if (!(this.#input instanceof Input)) {
-      this.#input = createInput()
+    if (!(this.#dispatcher instanceof Dispatcher)) {
+      this.#dispatcher = createDispatcher()
     }
   }
 

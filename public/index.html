@@ -38,18 +38,19 @@
   import CloserFlagRobot from "./robot/CloserFlagRobot.js";
   import HighestValueRobot from "./robot/HighestValueRobot.js"
   import SpecialValueRobot from "./robot/SpecialValueRobot.js"
-  import createPromiseInput from "./game/input/PromiseInput.js"
+  import createPromiseDispatcher from "./game/dispatch/PromiseDispatcher.js"
+  import {createGameEventFromEvent} from "./game/dispatch/GameEvent.js";
 
   let game = createGame()
   game.addPlayer(new CloserFlagRobot())
   game.addPlayer(new HighestValueRobot())
   game.addPlayer(new SpecialValueRobot())
 
-  //let input = createPromiseInput()
-  //document.addEventListener('click', () => {
-  //  input.resolve()
-  //})
-  //game.setInput(input)
+  let input = createPromiseDispatcher()
+  document.addEventListener('click', evt => {
+    input.resolve(createGameEventFromEvent(evt))
+  })
+  game.setDispatcher(input)
 
   game.setStageSize(20, 20)
   game.addCanvasDisplay(document.getElementById('stage1'), 200, 250)
