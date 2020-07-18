@@ -22,4 +22,5 @@ A game to capture the flags before the enemy. You can use a robot to control you
   - [x] Find flag highest value - Search for the flag with the most points
   - [x] First flag - Search for the first flag
   - [x] Special flag - Give preference to special flags
+- [ ] Show the color indicator at side of name in CanvasDisplay
   
