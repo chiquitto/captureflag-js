@@ -1,15 +1,31 @@
 export class GameEvent {
 
+  #type
+  #input
+
+  constructor(type, input) {
+    this.#type = type;
+    this.#input = input;
+  }
+
   toPlainObject() {
-    return {}
+    return {
+      type: this.#type,
+      input: this.#input
+    }
   }
 
 }
 
 export function createGameEvent() {
-  return new GameEvent()
+  return new GameEvent(null, null)
 }
 
-export function createGameEventFromEvent() {
-  return new GameEvent()
+/**
+ *
+ * @param {KeyboardEvent} event
+ * @returns {GameEvent}
+ */
+export function createGameEventFromKeyboardEvent(event) {
+  return new GameEvent('KeyboardEvent', event.key)
 }

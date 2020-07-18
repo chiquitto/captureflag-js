@@ -33,32 +33,7 @@
   </tr>
 </table>
 
-<script type="module">
-  import createGame from './game/Game.js';
-  import CloserFlagRobot from "./robot/CloserFlagRobot.js";
-  import HighestValueRobot from "./robot/HighestValueRobot.js"
-  import SpecialValueRobot from "./robot/SpecialValueRobot.js"
-  import createPromiseDispatcher from "./game/dispatch/PromiseDispatcher.js"
-  import {createGameEventFromEvent} from "./game/dispatch/GameEvent.js";
-
-  let game = createGame()
-  game.addPlayer(new CloserFlagRobot())
-  game.addPlayer(new HighestValueRobot())
-  game.addPlayer(new SpecialValueRobot())
-
-  let input = createPromiseDispatcher()
-  document.addEventListener('click', evt => {
-    input.resolve(createGameEventFromEvent(evt))
-  })
-  game.setDispatcher(input)
-
-  game.setStageSize(20, 20)
-  game.addCanvasDisplay(document.getElementById('stage1'), 200, 250)
-
-  game.start()
-
-  console.log(game)
-</script>
+<script type="module" src="game.js"></script>
 </body>
 
 </html>

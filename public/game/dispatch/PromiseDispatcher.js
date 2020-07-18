@@ -1,8 +1,10 @@
-import {Dispatcher} from "./Dispatcher.js";
+import {Dispatcher} from "./Dispatcher.js"
 
 export class PromiseDispatcher extends Dispatcher {
 
   #promiseResolve
+  #publicData
+  #player
 
   /**
    *
@@ -12,9 +14,12 @@ export class PromiseDispatcher extends Dispatcher {
    * @returns {(Action|Promise<Action>)}
    */
   captureAction(player, publicData) {
+    this.#player = player
+    this.#publicData = publicData
+
     return new Promise((resolve, reject) => {
-      this.#promiseResolve = gameEvent => {
-        return resolve(player.robot.action(publicData, gameEvent.toPlainObject()))
+      this.#promiseResolve = action => {
+        return resolve(action)
       }
     })
   }
@@ -28,7 +33,12 @@ export class PromiseDispatcher extends Dispatcher {
       return
     }
 
-    this.#promiseResolve(gameEvent)
+    let action = this.#player.robot.action(this.#publicData, gameEvent.toPlainObject())
+    if (action == null) {
+      return
+    }
+
+    this.#promiseResolve(action)
     this.#promiseResolve = null
   }
 

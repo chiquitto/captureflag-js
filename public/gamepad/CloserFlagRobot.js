@@ -1,6 +1,6 @@
 import FirstFlagRobot from "./FirstFlagRobot.js"
 
-export default class CloserFlagRobot extends FirstFlagRobot{
+export default class CloserFlagRobot extends FirstFlagRobot {
 
   action(publicData) {
     const player = publicData.player

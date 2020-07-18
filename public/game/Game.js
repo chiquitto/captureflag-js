@@ -160,7 +160,6 @@ class Game {
           actionArgs = {type: actionArgs}
         }
 
-        console.log(actionArgs)
         const privateData = {
           stage: this.#stage,
           player: chainValues.player,
