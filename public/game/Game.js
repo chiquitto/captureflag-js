@@ -21,7 +21,6 @@ class Game {
   #stage
   #stageWidth = 20
   #stageHeight = 20
-  #winner = null
 
   // control the game
   #canNextTurn
@@ -30,6 +29,9 @@ class Game {
   #flagSize = 1
   #maxFlags = 5
   #interval
+  #winner = null
+  #finished = null
+  #turn = 0
 
   /**
    *
@@ -120,23 +122,36 @@ class Game {
       return
     }
     this.#canNextTurn = false
+    this.#turn++
 
     const playerNumber = this.playerTurnRotate()
 
     const opts = {
       player: this.#players[playerNumber],
       playerNumber,
-      stepSize: 1
+      stepSize: 1,
+      turn: this.#turn
     }
 
     const p = Promise.resolve(opts)
       .then(this.runTestFlags())
       .then(this.runPlayerAction())
       .then(this.runTestFlagCapture())
-      .then(() => this.draw())
+      .then(this.runDraw())
       // .then(this.runDelay())
+      .then(this.runTestFinish())
       .catch(console.error)
-      .then(() => this.#canNextTurn = true)
+      .finally(() => {
+        this.#canNextTurn = true
+      })
+
+  }
+
+  runDraw() {
+    return input => {
+      this.draw()
+      return input
+    }
   }
 
   runPlayerAction() {
@@ -190,6 +205,29 @@ class Game {
     }
   }
 
+  runTestFinish() {
+    return input => {
+      for (let player of this.#players) {
+        if (player.score >= 5) {
+          this.#finished = true
+          this.#winner = player
+          break
+        }
+      }
+
+      if (this.#turn >= 1000) {
+        this.#finished = true
+      }
+
+      if (this.#finished && (this.#winner == null)) {
+        this.#winner = this.#players
+          .reduce((max, p) => p.score > max.score ? p : max);
+      }
+
+      return input
+    }
+  }
+
   runTestFlagCapture() {
     return input => {
       const player = input.player
@@ -205,10 +243,6 @@ class Game {
             player.specialPoints += flag.points
           } else {
             player.score += flag.points
-          }
-
-          if (player.score >= 5) {
-            //  this.#winner = player
           }
 
           flags2Remove.push(i)
@@ -250,6 +284,8 @@ class Game {
 
     for (let player of this.#players) {
       player.score = 0
+      player.turns = 0
+
       do {
         this.randomPosition(player.polygon)
       } while (this.collisionCounter(player).length > 0)
@@ -321,6 +357,8 @@ class Game {
 
   start() {
     this.#winner = null
+    this.#finished = false
+    this.#turn = 0
 
     this.prepareStage()
     this.preparePlayers()
@@ -341,14 +379,14 @@ class Game {
   }
 
   isFinished() {
-    if (this.#winner == null) {
+    if (!this.#finished) {
       return false
     }
 
     clearInterval(this.#interval)
     this.#interval = null
 
-    window.alert('O jogo acabou.')
+    window.alert(`O jogo acabou. O vencedor é ${this.#winner.name}.`)
     return true
   }
 
@@ -399,7 +437,6 @@ class Game {
       this.#dispatcher = createDispatcher()
     }
   }
-
 }
 
 /**
