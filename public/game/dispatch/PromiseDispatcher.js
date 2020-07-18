@@ -33,7 +33,7 @@ export class PromiseDispatcher extends Dispatcher {
       return
     }
 
-    let action = this.#player.robot.action(this.#publicData, gameEvent.toPlainObject())
+    let action = this.#player.gamepad.action(this.#publicData, gameEvent.toPlainObject())
     if (action == null) {
       return
     }

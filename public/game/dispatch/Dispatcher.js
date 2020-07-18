@@ -8,7 +8,7 @@ export class Dispatcher {
    * @returns {(Action|Promise<Action>)}
    */
   captureAction(player, publicData) {
-    return player.robot.action(publicData, null)
+    return player.gamepad.action(publicData, null)
   }
 
 }

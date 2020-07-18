@@ -208,7 +208,7 @@ class Game {
   runTestFinish() {
     return input => {
       for (let player of this.#players) {
-        if (player.score >= 5) {
+        if (player.score >= 50) {
           this.#finished = true
           this.#winner = player
           break

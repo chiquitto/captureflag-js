@@ -1,6 +1,7 @@
 import Display from "./Display.js"
 import Polygon from "../model/Polygon.js"
 import {Rectangle} from "../model/Rectangle.js"
+import {PlayerImgAvatar} from "../model/PlayerImgAvatar.js";
 
 class CanvasDisplay extends Display {
 
@@ -60,6 +61,14 @@ class CanvasDisplay extends Display {
    * @param {Player[]} players
    */
   drawScores(players) {
+    this.drawPlayers(players)
+  }
+
+  /**
+   *
+   * @param {Player[]} players
+   */
+  drawPlayers(players) {
     this.#ctx.fillStyle = 'black'
     this.#ctx.font = "12px monospace"
     this.#ctx.textAlign = "left"
@@ -71,9 +80,24 @@ class CanvasDisplay extends Display {
       const player = players[i]
       // const playerNumber = parseInt(i, 10) + 1
 
-      this.#ctx.fillText(`#${player.number} ${player.name}: ${player.score} (${player.specialPoints})`, 10, yPos)
+      this.#ctx.fillStyle = '#000000'
+      this.#ctx.fillText(`${player.name}: ${player.score} (${player.specialPoints})`, 24, yPos)
+      this.drawPlayerAvatar(yPos, player)
 
       yPos += 15
+    }
+  }
+
+  drawPlayerAvatar(y, player) {
+    let x = 5
+    y -= 2
+    let size = 16
+
+    this.#ctx.fillStyle = player.color
+    this.#ctx.fillRect(x, y, size, size)
+
+    if (player.avatar instanceof PlayerImgAvatar) {
+      this.#ctx.drawImage(player.avatar.avatar, x, y, size, size);
     }
   }
 
@@ -170,9 +194,31 @@ class CanvasStageDisplay {
    */
   drawPlayers(players) {
     for (let player of players) {
-      this.drawPolygon(player.color, player.polygon)
-      this.drawTextInRectangle(`${player.number}`, player.polygon)
+      this.drawPlayer(player)
     }
+  }
+
+  drawPlayer(player) {
+    this.drawPolygon(player.color, player.polygon)
+
+    if (player.avatar instanceof PlayerImgAvatar) {
+      this.drawImage(player.avatar.avatar,
+        player.polygon.x, player.polygon.y,
+        player.polygon.width, player.polygon.height)
+    }
+
+    // this.drawTextInRectangle(`${player.number}`, player.polygon)
+  }
+
+  drawImage(img, x, y, width, height) {
+    width = this.dimenWidth(width)
+    height = this.dimenHeight(height)
+
+    this.#ctx.drawImage(
+      img,
+      this.posX(x), this.posY(y),
+      width, height
+    )
   }
 
   /**

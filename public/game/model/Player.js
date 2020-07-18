@@ -1,6 +1,9 @@
 import Polygon from "./Polygon.js"
 import {randomString} from "../util.js"
-import GameConfig from "../GameConfig.js";
+import GameConfig from "../GameConfig.js"
+import createPlayerImgAvatar from "./PlayerImgAvatar.js"
+import createPlayerColorAvatar from "./PlayerColorAvatar.js"
+import PlayerAvatar from "./PlayerAvatar.js"
 
 class Player {
   #id
@@ -10,7 +13,8 @@ class Player {
   #name
   #polygon
   #specialPoints
-  #robot
+  #gamepad
+  #avatar
 
   /**
    *
@@ -18,17 +22,36 @@ class Player {
    * @param {string} name
    * @param {string} color
    * @param {Polygon|Rectangle} polygon
+   * @param {Object} gamepad
    */
-  constructor(number, name, color, polygon, robot) {
+  constructor(number, name, color, polygon, gamepad) {
     this.#number = number
     this.#color = color
     this.#name = name
     this.#polygon = polygon
-    this.#robot = robot
+    this.#gamepad = gamepad
 
     this.#id = randomString(32)
     this.#score = 0
     this.#specialPoints = 0
+
+    this.loadAvatar(gamepad)
+  }
+
+  loadAvatar(gamepad) {
+    if ((typeof gamepad.avatar) !== "undefined") {
+      this.#avatar = createPlayerImgAvatar(gamepad.avatar)
+    } else {
+      this.#avatar = createPlayerColorAvatar(gamepad.color)
+    }
+  }
+
+  /**
+   *
+   * @returns {PlayerAvatar}
+   */
+  get avatar() {
+    return this.#avatar
   }
 
   /**
@@ -80,8 +103,8 @@ class Player {
     return this.#polygon
   }
 
-  get robot() {
-    return this.#robot
+  get gamepad() {
+    return this.#gamepad
   }
 
   /**
@@ -120,8 +143,9 @@ class Player {
  * @param {string} name
  * @param {string} color
  * @param {Polygon|Rectangle} polygon
+ * @param {Object} gamepad
  * @returns {Player}
  */
-export default function createPlayer(number, name, color, polygon, robot) {
-  return new Player(number, name, color, polygon, robot)
+export default function createPlayer(number, name, color, polygon, gamepad) {
+  return new Player(number, name, color, polygon, gamepad)
 }

@@ -10,6 +10,7 @@ import KeyboardGamePad2 from "./gamepad/KeyboardGamePad2.js";
 let game = createGame()
 game.addPlayer(new CloserFlagRobot())
 game.addPlayer(new HighestValueRobot())
+game.addPlayer(new HighestValueRobot())
 // game.addPlayer(new SpecialValueRobot())
 // game.addPlayer(new KeyboardGamePad1())
 // game.addPlayer(new KeyboardGamePad2())
