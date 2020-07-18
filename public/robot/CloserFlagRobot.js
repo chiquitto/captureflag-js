@@ -19,4 +19,12 @@ export default class CloserFlagRobot extends FirstFlagRobot{
     return this.goto(player, flags[0])
   }
 
+  get color() {
+    return '#FF0000'
+  }
+
+  get name() {
+    return 'Closer'
+  }
+
 }

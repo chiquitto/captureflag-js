@@ -35,37 +35,24 @@
 
 <script type="module">
   import createGame from './game/Game.js';
-  // import createDomClickInput from "./game/input/DomInput.js";
-  // import createDomQueueInput from "./game/input/QueueInput.js";
-  import RandomRobot from "./robot/RandomRobot.js";
-  import FirstFlagRobot from "./robot/FirstFlagRobot.js";
-  import createRobotInput from "./game/input/RobotInput.js";
-  import createPromiseRobotInput from "./game/input/PromiseRobotInput.js";
   import CloserFlagRobot from "./robot/CloserFlagRobot.js";
   import HighestValueRobot from "./robot/HighestValueRobot.js"
-  // import SpecialValueRobot from "./robot/SpecialValueRobot.js";
+  import SpecialValueRobot from "./robot/SpecialValueRobot.js"
+  import createPromiseInput from "./game/input/PromiseInput.js"
 
   let game = createGame()
-  game.addPlayer('red')
-  game.addPlayer('blue')
-  // game.setInput(createDomClickInput('player0Left', 'player0Right', 'player0Up', 'player0Down'))
-  /*game.setInput(createDomQueueInput(
-    document,
-    ['UP', 'DOWN', 'LEFT', 'RIGHT', 'UP'],
-    ['LEFT', 'RIGHT', 'UP', 'DOWN', 'LEFT'],
-  ))*/
+  game.addPlayer(new CloserFlagRobot())
+  game.addPlayer(new HighestValueRobot())
+  game.addPlayer(new SpecialValueRobot())
 
-  // const randomRobot = new RandomRobot()
-  // const firstFlagRobot = new FirstFlagRobot()
-  const closerFlagRobot = new CloserFlagRobot()
-  const highestValueRobot = new HighestValueRobot()
-  // const specialValueRobot = new SpecialValueRobot()
-  game.setInput(createRobotInput([closerFlagRobot, highestValueRobot]))
-  // game.setInput(createPromiseRobotInput(document, [closerFlagRobot, highestValueRobot]))
+  //let input = createPromiseInput()
+  //document.addEventListener('click', () => {
+  //  input.resolve()
+  //})
+  //game.setInput(input)
 
-  game.setStageSize(15, 15)
+  game.setStageSize(20, 20)
   game.addCanvasDisplay(document.getElementById('stage1'), 200, 250)
-  // game.addConsoleDisplay()
 
   game.start()
 

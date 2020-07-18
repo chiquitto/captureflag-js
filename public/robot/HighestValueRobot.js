@@ -26,4 +26,12 @@ export default class HighestValueRobot extends FirstFlagRobot {
     return this.goto(player, flags[0])
   }
 
+  get color() {
+    return '#0000FF'
+  }
+
+  get name() {
+    return 'Highest'
+  }
+
 }

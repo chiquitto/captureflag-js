@@ -126,9 +126,9 @@ class CanvasDisplay extends Display {
 
     for (let i in players) {
       const player = players[i]
-      const playerNumber = parseInt(i, 10) + 1
+      // const playerNumber = parseInt(i, 10) + 1
 
-      this.#ctx.fillText(`Player ${playerNumber}: ${player.score} (Special: ${player.specialPoints})`, 10, yPos)
+      this.#ctx.fillText(`${player.name}: ${player.score} (Special: ${player.specialPoints})`, 10, yPos)
 
       yPos += 15
     }

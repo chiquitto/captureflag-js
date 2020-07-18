@@ -7,19 +7,24 @@ class Player {
   #number
   #score
   #color
+  #name
   #polygon
   #specialPoints
+  #robot
 
   /**
    *
    * @param {number} number
+   * @param {string} name
    * @param {string} color
    * @param {Polygon|Rectangle} polygon
    */
-  constructor(number, color, polygon) {
+  constructor(number, name, color, polygon, robot) {
     this.#number = number
     this.#color = color
+    this.#name = name
     this.#polygon = polygon
+    this.#robot = robot
 
     this.#id = randomString(32)
     this.#score = 0
@@ -53,6 +58,14 @@ class Player {
 
   /**
    *
+   * @returns {string}
+   */
+  get name() {
+    return this.#name
+  }
+
+  /**
+   *
    * @returns {number}
    */
   get number() {
@@ -65,6 +78,10 @@ class Player {
    */
   get polygon() {
     return this.#polygon
+  }
+
+  get robot() {
+    return this.#robot
   }
 
   /**
@@ -100,10 +117,11 @@ class Player {
 /**
  *
  * @param {number} number
+ * @param {string} name
  * @param {string} color
  * @param {Polygon|Rectangle} polygon
  * @returns {Player}
  */
-export default function createPlayer(number, color, polygon) {
-  return new Player(number, color, polygon)
+export default function createPlayer(number, name, color, polygon, robot) {
+  return new Player(number, name, color, polygon, robot)
 }

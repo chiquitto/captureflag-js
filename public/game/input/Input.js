@@ -1,25 +1,33 @@
-export default class Input {
+export class Input {
 
-  #publicData
+  // #publicData
 
   /**
    *
+   * @param {Player} player
    * @param {Object} publicData
    * @param {number} publicData.playerNumber
    * @returns {(Action|Promise<Action>)}
    */
-  captureAction(publicData) {
-    this.#publicData = publicData
-
-    return null
+  captureAction(player, publicData) {
+    // this.#publicData = publicData
+    return player.robot.action(publicData)
   }
 
   /**
    *
    * @returns {Object}
    */
-  get publicData() {
-    return this.#publicData
-  }
+  //get publicData() {
+  //  return this.#publicData
+  //}
 
+}
+
+/**
+ *
+ * @returns {Input}
+ */
+export default function createInput() {
+  return new Input()
 }

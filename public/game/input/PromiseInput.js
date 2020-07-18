@@ -1,71 +1,39 @@
-import MoveUpAction from "../action/MoveUpAction.js";
-import MoveLeftAction from "../action/MoveLeftAction.js";
-import MoveRightAction from "../action/MoveRightAction.js";
-import MoveDownAction from "../action/MoveDownAction.js";
-import Input from "./Input.js";
+import {Input} from "./Input.js";
 
-export default class PromiseInput extends Input {
+export class PromiseInput extends Input {
 
   #promiseResolve
 
   /**
    *
+   * @param {Player} player
    * @param {Object} publicData
    * @param {number} publicData.playerNumber
    * @returns {(Action|Promise<Action>)}
    */
-  captureAction(publicData) {
-    super.captureAction(publicData)
-
+  captureAction(player, publicData) {
     return new Promise((resolve, reject) => {
-      this.#promiseResolve = resolve
+      this.#promiseResolve = () => {
+        return resolve(player.robot.action(publicData))
+      }
     })
   }
 
-  triggerAction(action) {
+  resolve() {
     if (this.#promiseResolve == null) {
       return
     }
 
-    this.#promiseResolve(action)
+    this.#promiseResolve()
     this.#promiseResolve = null
   }
 
-  /**
-   *
-   * @param {string} action
-   */
-  triggerActionString(action) {
-    switch (action) {
-      case 'UP':
-        this.triggerUp()
-        break
-      case 'DOWN':
-        this.triggerDown()
-        break
-      case 'LEFT':
-        this.triggerLeft()
-        break
-      case 'RIGHT':
-        this.triggerRight()
-        break
-    }
-  }
+}
 
-  triggerLeft() {
-    this.triggerAction(new MoveLeftAction())
-  }
-
-  triggerRight() {
-    this.triggerAction(new MoveRightAction())
-  }
-
-  triggerUp() {
-    this.triggerAction(new MoveUpAction())
-  }
-
-  triggerDown() {
-    this.triggerAction(new MoveDownAction())
-  }
-
+/**
+ *
+ * @returns {Input}
+ */
+export default function createPromiseInput() {
+  return new PromiseInput()
 }

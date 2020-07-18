@@ -6,10 +6,10 @@ import createCanvasDisplay from "./display/CanvasDisplay.js"
 import createConsoleDisplay from "./display/ConsoleDisplay.js"
 import createFlag from "./model/Flag.js"
 import createRectangle from "./model/Rectangle.js"
-import Action from "./action/Action.js";
-import createSpecialFlag, {SpecialFlag} from "./model/SpecialFlag.js";
-import GameConfig from "./GameConfig.js";
-import ActionFactory from "./action/ActionFactory.js";
+import createSpecialFlag, {SpecialFlag} from "./model/SpecialFlag.js"
+import GameConfig from "./GameConfig.js"
+import ActionFactory from "./action/ActionFactory.js"
+import createInput, {Input} from "./input/Input.js";
 
 class Game {
   #displays = []
@@ -82,16 +82,18 @@ class Game {
     ))
   }
 
-  addPlayer(color) {
+  addPlayer(robot) {
     const player = createPlayer(
       this.#players.length,
-      color,
+      robot.name,
+      robot.color,
       createRectangle(
         0,
         0,
         this.#playerSize,
         this.#playerSize
       ),
+      robot
     )
 
     this.#players.push(player)
@@ -145,13 +147,20 @@ class Game {
         return chainValues
       }
 
-      let action = this.#input.captureAction(this.generatePublicData(chainValues))
+      let action = this.#input.captureAction(chainValues.player,
+        this.generatePublicData(chainValues))
+
       if (!(action instanceof Promise)) {
         action = Promise.resolve(action)
       }
 
       return action.then((actionArgs) => {
 
+        if ((typeof actionArgs == "string") || (actionArgs instanceof String)) {
+          actionArgs = {type: actionArgs}
+        }
+
+        console.log(actionArgs)
         const privateData = {
           stage: this.#stage,
           player: chainValues.player,
@@ -316,6 +325,7 @@ class Game {
 
     this.prepareStage()
     this.preparePlayers()
+    this.prepareInputs()
 
     this.#flags = []
     this.initFlags()
@@ -382,6 +392,12 @@ class Game {
   initFlags() {
     for (let i = 0; i < this.#maxFlags; i++) {
       this.addFlag()
+    }
+  }
+
+  prepareInputs() {
+    if (!(this.#input instanceof Input)) {
+      this.#input = createInput()
     }
   }
 

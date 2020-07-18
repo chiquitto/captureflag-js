@@ -26,4 +26,12 @@ export default class SpecialValueRobot extends FirstFlagRobot {
     return this.goto(player, flags[0])
   }
 
+  get color() {
+    return '#00FFFF'
+  }
+
+  get name() {
+    return 'Special'
+  }
+
 }
