@@ -9,7 +9,7 @@ import createRectangle from "./model/Rectangle.js"
 import createSpecialFlag, {SpecialFlag} from "./model/SpecialFlag.js"
 import GameConfig from "./GameConfig.js"
 import ActionFactory from "./action/ActionFactory.js"
-import createDispatcher, {Dispatcher} from "./dispatch/Dispatcher.js";
+import createDispatcher, {Dispatcher} from "./dispatch/Dispatcher.js"
 
 class Game {
   #displays = []
@@ -40,6 +40,12 @@ class Game {
    * @param {number} canvasHeight
    */
   addCanvasDisplay(canvasElement, canvasWidth, canvasHeight) {
+    if (canvasWidth == undefined) {
+      canvasWidth = canvasElement.width
+    }
+    if (canvasHeight == undefined) {
+      canvasHeight = canvasElement.height
+    }
     this.addDisplay(createCanvasDisplay(canvasWidth, canvasHeight, canvasElement))
   }
 
@@ -215,13 +221,13 @@ class Game {
         }
       }
 
-      if (this.#turn >= 1000) {
+      if (this.#turn >= (this.#players.length * 1000)) {
         this.#finished = true
       }
 
       if (this.#finished && (this.#winner == null)) {
         this.#winner = this.#players
-          .reduce((max, p) => p.score > max.score ? p : max);
+          .reduce((max, p) => p.score > max.score ? p : max)
       }
 
       return input
@@ -312,7 +318,7 @@ class Game {
 
     this.#interval = setInterval(() => {
       this.nextTurn()
-    }, 250)
+    }, 200)
 
   }
 

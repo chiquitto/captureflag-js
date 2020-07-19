@@ -1,7 +1,7 @@
 import Display from "./Display.js"
 import Polygon from "../model/Polygon.js"
 import {Rectangle} from "../model/Rectangle.js"
-import {PlayerImgAvatar} from "../model/PlayerImgAvatar.js";
+import {PlayerImgAvatar} from "../model/PlayerImgAvatar.js"
 
 class CanvasDisplay extends Display {
 
@@ -70,34 +70,34 @@ class CanvasDisplay extends Display {
    */
   drawPlayers(players) {
     this.#ctx.fillStyle = 'black'
-    this.#ctx.font = "12px monospace"
+    this.#ctx.font = "20px monospace"
     this.#ctx.textAlign = "left"
     this.#ctx.textBaseline = "top"
 
-    let yPos = 5
+    let yPos = 0
 
     for (let i in players) {
       const player = players[i]
       // const playerNumber = parseInt(i, 10) + 1
 
       this.#ctx.fillStyle = '#000000'
-      this.#ctx.fillText(`${player.name}: ${player.score} (${player.specialPoints})`, 24, yPos)
+      this.#ctx.fillText(`${player.name}: ${player.score} (${player.specialPoints})`, 31, yPos)
       this.drawPlayerAvatar(yPos, player)
 
-      yPos += 15
+      yPos += 26
     }
   }
 
   drawPlayerAvatar(y, player) {
     let x = 5
-    y -= 2
-    let size = 16
+    y -= 3
+    let size = 26
 
     this.#ctx.fillStyle = player.color
     this.#ctx.fillRect(x, y, size, size)
 
     if (player.avatar instanceof PlayerImgAvatar) {
-      this.#ctx.drawImage(player.avatar.avatar, x, y, size, size);
+      this.#ctx.drawImage(player.avatar.avatar, x, y, size, size)
     }
   }
 
@@ -125,8 +125,8 @@ class CanvasStageDisplay {
    */
   constructor(ctx, canvasWidth, canvasHeight) {
     this.#ctx = ctx
-    this.#canvasWidth = canvasWidth;
-    this.#canvasHeight = canvasHeight;
+    this.#canvasWidth = canvasWidth
+    this.#canvasHeight = canvasHeight
   }
 
   calculateStageVars(stage) {
