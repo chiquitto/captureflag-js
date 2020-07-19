@@ -15,6 +15,10 @@ class Rectangle extends Polygon {
     this.#height = height
   }
 
+  copy() {
+    return new Rectangle(this.#x, this.#y, this.#width, this.#height)
+  }
+
   toPlainObject() {
     return {
       type: 'Rectangle',

@@ -99,7 +99,7 @@ class Player {
 
   /**
    *
-   * @returns {Polygon}
+   * @returns {Rectangle}
    */
   get polygon() {
     return this.#polygon

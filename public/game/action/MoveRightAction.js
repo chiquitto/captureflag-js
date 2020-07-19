@@ -1,8 +1,9 @@
-import MoveAction from "./MoveAction.js";
+import MoveAction from "./MoveAction.js"
 
 export default class MoveRightAction extends MoveAction {
 
-  subApply(player, options) {
-    player.polygon.x += options.stepSize
+  move(rectangle, args) {
+    rectangle.x += args.options.stepSize
   }
+
 }

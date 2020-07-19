@@ -1,7 +1,8 @@
-import MoveUpAction from "./MoveUpAction.js";
-import MoveDownAction from "./MoveDownAction.js";
-import MoveLeftAction from "./MoveLeftAction.js";
-import MoveRightAction from "./MoveRightAction.js";
+import MoveUpAction from "./MoveUpAction.js"
+import MoveDownAction from "./MoveDownAction.js"
+import MoveLeftAction from "./MoveLeftAction.js"
+import MoveRightAction from "./MoveRightAction.js"
+import DoubleMovementSpecial from "./DoubleMovementSpecial.js"
 
 export default class ActionFactory {
 
@@ -11,6 +12,8 @@ export default class ActionFactory {
     }
 
     switch (args.type) {
+      case 'DoubleMovementSpecial':
+        return new DoubleMovementSpecial(args)
       case 'UP':
         return new MoveUpAction(args)
       case 'RIGHT':

@@ -2,74 +2,36 @@ import Action from "./Action.js"
 
 export default class MoveAction extends Action {
 
-  #backupData
-  #player
-
   /**
    *
-   * @param {Stage} stage
-   * @param {Player} player
-   * @param {Flag[]} flags
-   * @param {Player[]} players
-   * @param {Object} options
-   * @param {number} options.stepSize
+   * @param {Rectangle} polygon
+   * @param {ActionArgs} args
    */
-  apply({stage, player, flags, players, options}) {
-    this.#player = player
-
-    this.backup()
-
-    this.subApply(player, options)
-
-    if (!this.testResult(stage, player, players)) {
-      this.rollback()
-      throw new Error('Invalid position')
-    }
+  move(rectangle, args) {
+    throw new Error('MoveAction.move not implemented')
   }
 
-  backup() {
-    this.#backupData = {
-      x: this.#player.polygon.x,
-      y: this.#player.polygon.y
-    }
+  subApply(args) {
+    this.move(args.player.polygon, args)
   }
 
-  rollback() {
-    this.#player.polygon.x = this.#backupData.x
-    this.#player.polygon.y = this.#backupData.y
-  }
+  testBeforeApply(args) {
+    let rectangle = args.player.polygon.copy()
+    this.move(rectangle, args)
 
-  /**
-   *
-   * @param {Player} player
-   * @param {Object} options
-   * @param {number} options.stepSize
-   */
-  subApply(player, options) {
-    throw new Error('MoveAction.subApply not implemented')
-  }
-
-  /**
-   *
-   * @param {Stage} stage
-   * @param {Player} player
-   * @param {Player[]} players
-   * @returns {boolean}
-   */
-  testResult(stage, player, players) {
-    if (!stage.isContained(player.polygon)) {
-      return false
+    if (!args.stage.isContained(rectangle)) {
+      throw new Error('Invalid action: Player is outside stage')
     }
 
-    for (let aux of players) {
-      if (player.equals(aux)) {
+    for (let aux of args.players) {
+      if (args.player.equals(aux)) {
         continue
       }
 
-      if (player.polygon.detectCollision(aux.polygon)) {
-        return false
+      if (rectangle.detectCollision(aux.polygon)) {
+        throw new Error('Invalid action: Player collision')
       }
     }
-    return true
   }
+
 }

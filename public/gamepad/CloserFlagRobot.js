@@ -5,6 +5,10 @@ export default class CloserFlagRobot extends FirstFlagRobot {
   action(publicData) {
     const player = publicData.player
 
+    if (player.sp >= 5) {
+      return this.callDoubleMovementSpecial()
+    }
+
     let flags = publicData.flags
       .map((flag, pos) => {
         flag.playerDistance = this.calcFlagDistance(player, flag)
@@ -17,6 +21,12 @@ export default class CloserFlagRobot extends FirstFlagRobot {
       })
 
     return this.goto(player, flags[0])
+  }
+
+  callDoubleMovementSpecial() {
+    return {
+      type: 'DoubleMovementSpecial'
+    }
   }
 
   get color() {

@@ -457,11 +457,17 @@ class Game {
   }
 
   generatePublicData(args) {
+    /**
+     *
+     * @param {Player} player
+     * @returns {{[p: string]: *}}
+     */
     const playerData = player => {
       return {
         id: player.id,
         number: player.number,
         name: player.color,
+        sp: player.specialPoints,
         ...player.polygon.toPlainObject()
       }
     }
