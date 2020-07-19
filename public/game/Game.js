@@ -69,8 +69,13 @@ class Game {
   }
 
   flagGenerator() {
-    const points = randomValue([1, 1, 1, 1, 2, 2, 3])
-    const color = ['#00FF00', '#FF00FF', '#000000'][points - 1]
+    const points = randomValue([
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      2, 2, 2, 2, 2,
+      3, 3,
+      4
+    ])
+    const color = ['#00FF00', '#FF00FF', '#000000', '#FFFFFF'][points - 1]
 
     return createFlag(points, color, createRectangle(
       0,
@@ -132,17 +137,17 @@ class Game {
 
     const playerNumber = this.playerTurnRotate()
 
-    const opts = {
-      player: this.#players[playerNumber],
-      playerNumber,
-      stepSize: 1,
-      turn: this.#turn
-    }
+    const turnValues = new TurnValues()
+    turnValues.player = this.#players[playerNumber]
+    turnValues.playerNumber = playerNumber
+    turnValues.stepSize = 1
+    turnValues.turn = this.#turn
 
-    const p = Promise.resolve(opts)
+    const p = Promise.resolve(turnValues)
       .then(this.runTestFlags())
       .then(this.runPlayerAction())
       .then(this.runTestFlagCapture())
+      .then(this.runPlayerPosAction())
       .then(this.runDraw())
       // .then(this.runDelay())
       .then(this.runTestFinish())
@@ -153,23 +158,52 @@ class Game {
 
   }
 
-  runDraw() {
-    return input => {
-      this.draw()
-      return input
+  runPlayerPosAction() {
+    /**
+     *
+     * @param {TurnValues} turnValues
+     * @returns {TurnValues}
+     */
+    const f = turnValues => {
+      turnValues.player.turns++
+
+      if (turnValues.player.turns % 5 == 0) {
+        turnValues.player.specialPoints += 3
+      }
+
+      return turnValues
     }
+    return f
+  }
+
+  runDraw() {
+    /**
+     *
+     * @param {TurnValues} turnValues
+     * @returns {TurnValues}
+     */
+    const f = turnValues => {
+      this.draw()
+      return turnValues
+    }
+    return f
   }
 
   runPlayerAction() {
-    return chainValues => {
+    /**
+     *
+     * @param {TurnValues} turnValues
+     * @returns {Promise<TurnValues>|TurnValues}
+     */
+    const f = turnValues => {
 
       if (this.#dispatcher == null) {
         throw new Error('Dispatcher isnt defined')
-        return chainValues
+        return turnValues
       }
 
-      let action = this.#dispatcher.captureAction(chainValues.player,
-        this.generatePublicData(chainValues))
+      let action = this.#dispatcher.captureAction(turnValues.player,
+        this.generatePublicData(turnValues))
 
       if (!(action instanceof Promise)) {
         action = Promise.resolve(action)
@@ -183,11 +217,11 @@ class Game {
 
         const privateData = {
           stage: this.#stage,
-          player: chainValues.player,
+          player: turnValues.player,
           flags: this.#flags,
           players: this.#players,
           options: {
-            stepSize: chainValues.stepSize
+            stepSize: turnValues.stepSize
           }
         }
 
@@ -196,23 +230,35 @@ class Game {
           action.apply(privateData)
         }
 
-        return chainValues
+        return turnValues
       })
     }
+    return f
   }
 
   runDelay() {
-    return input => {
+    /**
+     *
+     * @param {TurnValues} turnValues
+     * @returns {Promise<TurnValues>}
+     */
+    const f = turnValues => {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          resolve(input)
+          resolve(turnValues)
         }, 0)
       })
     }
+    return f
   }
 
   runTestFinish() {
-    return input => {
+    /**
+     *
+     * @param {TurnValues} turnValues
+     * @returns {TurnValues}
+     */
+    const f = turnValues => {
       for (let player of this.#players) {
         if (player.score >= 50) {
           this.#finished = true
@@ -230,13 +276,19 @@ class Game {
           .reduce((max, p) => p.score > max.score ? p : max)
       }
 
-      return input
+      return turnValues
     }
+    return f
   }
 
   runTestFlagCapture() {
-    return input => {
-      const player = input.player
+    /**
+     *
+     * @param {TurnValues} turnValues
+     * @returns {TurnValues}
+     */
+    const f = turnValues => {
+      const player = turnValues.player
 
       const flags2Remove = []
       const length = this.#flags.length
@@ -260,17 +312,25 @@ class Game {
         this.addFlag()
       }
 
-      return input
+      return turnValues
     }
+    return f
   }
 
   runTestFlags() {
-    return input => {
+    /**
+     *
+     * @param {TurnValues} turnValues
+     * @returns {TurnValues}
+     */
+    const f = turnValues => {
       if (this.#flags.length == 0) {
         this.addFlag()
       }
-      return input
+      return turnValues
     }
+
+    return f
   }
 
   setStageSize(width, height) {
@@ -442,6 +502,61 @@ class Game {
     if (!(this.#dispatcher instanceof Dispatcher)) {
       this.#dispatcher = createDispatcher()
     }
+  }
+}
+
+class TurnValues {
+  #player
+  #playerNumber
+  #stepSize
+  #turn
+
+  /**
+   *
+   * @returns {Player}
+   */
+  get player() {
+    return this.#player;
+  }
+
+  set player(value) {
+    this.#player = value;
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  get playerNumber() {
+    return this.#playerNumber;
+  }
+
+  set playerNumber(value) {
+    this.#playerNumber = value;
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  get stepSize() {
+    return this.#stepSize;
+  }
+
+  set stepSize(value) {
+    this.#stepSize = value;
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  get turn() {
+    return this.#turn;
+  }
+
+  set turn(value) {
+    this.#turn = value;
   }
 }
 

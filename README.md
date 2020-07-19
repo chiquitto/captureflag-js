@@ -4,7 +4,7 @@ A game to capture the flags before the enemy. You can use a robot to control you
 
 # TODO list
 
-- [ ] Special points (+5 per movement)
+- [x] Special points (SP) - Add +3 SP for every 5 steps
 - [ ] Add special movements
   - [ ] Double movement
   - [ ] Triple movement

@@ -15,6 +15,7 @@ class Player {
   #specialPoints
   #gamepad
   #avatar
+  #turns
 
   /**
    *
@@ -34,6 +35,7 @@ class Player {
     this.#id = randomString(32)
     this.#score = 0
     this.#specialPoints = 0
+    this.#turns = 0
 
     this.loadAvatar(gamepad)
   }
@@ -133,6 +135,22 @@ class Player {
 
   set specialPoints(value) {
     this.#specialPoints = Math.min(value, GameConfig.playerMaxSpecialPoints)
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  get turns() {
+    return this.#turns
+  }
+
+  /**
+   *
+   * @param {number} value
+   */
+  set turns(value) {
+    this.#turns = value
   }
 
 }
