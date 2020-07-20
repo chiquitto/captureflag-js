@@ -15,7 +15,8 @@ class Player {
   #specialPoints
   #gamepad
   #avatar
-  #turns
+  #roundNumber
+  #stepNumber
 
   /**
    *
@@ -35,7 +36,8 @@ class Player {
     this.#id = randomString(32)
     this.#score = 0
     this.#specialPoints = 0
-    this.#turns = 0
+    this.#roundNumber = 0
+    this.#stepNumber = 0
 
     this.loadAvatar(gamepad)
   }
@@ -141,16 +143,32 @@ class Player {
    *
    * @returns {number}
    */
-  get turns() {
-    return this.#turns
+  get roundNumber() {
+    return this.#roundNumber
   }
 
   /**
    *
    * @param {number} value
    */
-  set turns(value) {
-    this.#turns = value
+  set roundNumber(value) {
+    this.#roundNumber = value
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  get stepNumber() {
+    return this.#stepNumber
+  }
+
+  /**
+   *
+   * @param {number} value
+   */
+  set stepNumber(value) {
+    this.#stepNumber = value
   }
 
 }

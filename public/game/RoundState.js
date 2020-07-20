@@ -1,4 +1,4 @@
-export default class PlayerTurn {
+export default class RoundState {
   #player
   #playerNumber
   #stepSize

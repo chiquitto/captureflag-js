@@ -4,27 +4,27 @@ export default class MoveAction extends Action {
 
   /**
    *
-   * @param {Rectangle} polygon
-   * @param {ActionArgs} args
+   * @param {Rectangle} rectangle
+   * @param {GameState} gameState
    */
-  move(rectangle, args) {
+  move(rectangle, gameState) {
     throw new Error('MoveAction.move not implemented')
   }
 
-  subApply(args) {
-    this.move(args.player.polygon, args)
+  subApply(gameState) {
+    this.move(gameState.roundState.player.polygon, gameState)
   }
 
-  testBeforeApply(args) {
-    let rectangle = args.player.polygon.copy()
-    this.move(rectangle, args)
+  testBeforeApply(gameState) {
+    let rectangle = gameState.roundState.player.polygon.copy()
+    this.move(rectangle, gameState)
 
-    if (!args.stage.isContained(rectangle)) {
+    if (!gameState.stage.isContained(rectangle)) {
       throw new Error('Invalid action: Player is outside stage')
     }
 
-    for (let aux of args.players) {
-      if (args.player.equals(aux)) {
+    for (let aux of gameState.players) {
+      if (gameState.roundState.player.equals(aux)) {
         continue
       }
 

@@ -5,7 +5,7 @@ export default class GameConfig {
   static playerSize = 2
   static playerGainSpecial = 3
   static playerGainSpecialAt = 5
-  static playerSteps = 30
+  static playerSteps = 1
 
   static flagSize = 1
   static maxFlags = 5

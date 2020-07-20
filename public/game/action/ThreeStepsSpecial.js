@@ -2,10 +2,10 @@ import Special from "./Special.js"
 
 class ThreeStepsSpecial extends Special {
 
-  subApply(args) {
-    super.subApply(args);
+  subApply(gameState) {
+    super.subApply(gameState)
 
-    args.playerTurn.stepsLeft += 3
+    gameState.roundState.stepsLeft += 3
   }
 
   get cost() {
@@ -16,9 +16,8 @@ class ThreeStepsSpecial extends Special {
 
 /**
  *
- * @param {Player} player
  * @returns {TwoStepsSpecial}
  */
-export default function createThreeStepsSpecial(player) {
-  return new ThreeStepsSpecial(player)
+export default function createThreeStepsSpecial() {
+  return new ThreeStepsSpecial()
 }

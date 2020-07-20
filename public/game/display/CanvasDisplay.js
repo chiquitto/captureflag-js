@@ -78,10 +78,10 @@ class CanvasDisplay extends Display {
 
     for (let i in players) {
       const player = players[i]
-      // const playerNumber = parseInt(i, 10) + 1
 
       this.#ctx.fillStyle = '#000000'
-      this.#ctx.fillText(`${player.name}: ${player.score} (${player.specialPoints})`, 31, yPos)
+      this.#ctx.fillText(`${player.name}: ${player.score} (${player.specialPoints}) [${player.roundNumber}/${player.stepNumber}]`, 35, yPos)
+
       this.drawPlayerAvatar(yPos, player)
 
       yPos += 26

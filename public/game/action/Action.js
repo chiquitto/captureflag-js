@@ -1,38 +1,27 @@
-/**
- * The complete Triforce, or one or more components of the Triforce.
- * @typedef {Object} ActionArgs
- * @property {Stage} stage - The stage of game
- * @property {Player} player
- * @property {PlayerTurn} playerTurn
- * @property {Flag[]} flags
- * @property {Player[]} players
- * @property {Object} options
- * @property {number} options.stepSize
- */
 export default class Action {
 
   /**
    *
-   * @param {ActionArgs} args
+   * @param {GameState} gameState
    */
-  apply(args) {
-    this.testBeforeApply(args)
-    this.subApply(args)
+  apply(gameState) {
+    this.testBeforeApply(gameState)
+    this.subApply(gameState)
   }
 
   /**
    *
-   * @param {ActionArgs} args
+   * @param {GameState} gameState
    */
-  subApply(args) {
+  subApply(gameState) {
     throw new Error('Action.subApply not implemented')
   }
 
   /**
    *
-   * @param {ActionArgs} args
+   * @param {GameState} args
    */
-  testBeforeApply(args) {
+  testBeforeApply(gameState) {
     throw new Error('Action.testBeforeApply not implemented')
   }
 
