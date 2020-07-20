@@ -279,6 +279,13 @@ class CanvasStageDisplay {
 }
 
 export default function createCanvasDisplay(canvasWidth, canvasHeight, canvasElement) {
+  if (canvasWidth == undefined) {
+    canvasWidth = canvasElement.width
+  }
+  if (canvasHeight == undefined) {
+    canvasHeight = canvasElement.height
+  }
+
   return new CanvasDisplay(canvasWidth, canvasHeight, canvasElement)
 }
 

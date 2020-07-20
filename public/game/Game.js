@@ -33,9 +33,13 @@ class Game {
   #turn = 0 // number of turns
 
   // config
-  #playerSize = 2
-  #flagSize = 1
-  #maxFlags = 5
+  #playerSize
+  #flagSize
+  #maxFlags
+
+  constructor() {
+
+  }
 
   /**
    *
@@ -44,12 +48,6 @@ class Game {
    * @param {number} canvasHeight
    */
   addCanvasDisplay(canvasElement, canvasWidth, canvasHeight) {
-    if (canvasWidth == undefined) {
-      canvasWidth = canvasElement.width
-    }
-    if (canvasHeight == undefined) {
-      canvasHeight = canvasElement.height
-    }
     this.addDisplay(createCanvasDisplay(canvasWidth, canvasHeight, canvasElement))
   }
 
@@ -72,13 +70,20 @@ class Game {
     this.#flags.push(flag)
   }
 
-  flagGenerator() {
-    const points = randomValue([
-      1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-      2, 2, 2, 2, 2,
-      3, 3,
-      4
-    ])
+  /**
+   *
+   * @param {number} points
+   * @returns {Flag}
+   */
+  flagGenerator(points) {
+    if ((points == undefined) || (points < 1) || (points > 4)) {
+      points = randomValue([
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2,
+        3, 3,
+        4
+      ])
+    }
     const color = ['#00FF00', '#FF00FF', '#000000', '#FFFFFF'][points - 1]
 
     return createFlag(points, color, createRectangle(
@@ -104,12 +109,7 @@ class Game {
       this.#players.length,
       robot.name,
       robot.color,
-      createRectangle(
-        0,
-        0,
-        this.#playerSize,
-        this.#playerSize
-      ),
+      createRectangle(0, 0, 0, 0),
       robot
     )
 
@@ -165,8 +165,8 @@ class Game {
     const f = playerTurn => {
       playerTurn.player.turns++
 
-      if (playerTurn.player.turns % 5 == 0) {
-        playerTurn.player.specialPoints += 3
+      if ((playerTurn.player.turns % GameConfig.playerGainSpecialAt) == 0) {
+        playerTurn.player.specialPoints += GameConfig.playerGainSpecial
       }
 
       playerTurn.stepsPassed++
@@ -266,14 +266,14 @@ class Game {
      */
     const f = playerTurn => {
       for (let player of this.#players) {
-        if (player.score >= 50) {
+        if (player.score >= GameConfig.finishPlayerPoints) {
           this.#finished = true
           this.#winner = player
           break
         }
       }
 
-      if (this.#turn >= (this.#players.length * 1000)) {
+      if (this.#turn >= (this.#players.length * GameConfig.finishPlayerTurns)) {
         this.#finished = true
       }
 
@@ -369,7 +369,7 @@ class Game {
     playerTurn.player = this.#players[playerNumber]
     playerTurn.playerNumber = playerNumber
     playerTurn.stepSize = 1
-    playerTurn.stepsLeft = 1
+    playerTurn.stepsLeft = GameConfig.playerSteps
     playerTurn.stepsPassed = 0
 
     return playerTurn
@@ -381,6 +381,9 @@ class Game {
     for (let player of this.#players) {
       player.score = 0
       player.turns = 0
+
+      player.polygon.width = this.#playerSize
+      player.polygon.height = this.#playerSize
 
       do {
         this.randomPosition(player.polygon)
@@ -408,7 +411,7 @@ class Game {
 
     this.#interval = setInterval(() => {
       this.nextTurn()
-    }, 300)
+    }, Math.floor(1000 / GameConfig.gameFps))
 
   }
 
@@ -455,6 +458,10 @@ class Game {
     this.#winner = null
     this.#finished = false
     this.#turn = 0
+
+    this.#playerSize = GameConfig.playerSize
+    this.#flagSize = GameConfig.flagSize
+    this.#maxFlags = GameConfig.maxFlags
 
     this.prepareStage()
     this.preparePlayers()

@@ -1,12 +1,24 @@
 export default class GameConfig {
-  static #playerMaxSpecialPoints = 100
+  static gameFps = 8
+
+  static playerMaxSpecialPoints = 100
+  static playerSize = 2
+  static playerGainSpecial = 3
+  static playerGainSpecialAt = 5
+  static playerSteps = 30
+
+  static flagSize = 1
+  static maxFlags = 5
+
+  static finishPlayerPoints = 50
+  static finishPlayerTurns = 1000
 
   /**
    *
    * @returns {number}
    */
   static get playerMaxSpecialPoints() {
-    return this.#playerMaxSpecialPoints
+    return this.playerMaxSpecialPoints
   }
 
   /**
@@ -14,6 +26,6 @@ export default class GameConfig {
    * @param {number} value
    */
   static set playerMaxSpecialPoints(value) {
-    this.#playerMaxSpecialPoints = value
+    this.playerMaxSpecialPoints = value
   }
 }
