@@ -5,8 +5,10 @@ export default class CloserFlagRobot extends FirstFlagRobot {
   action(publicData) {
     const player = publicData.player
 
-    if (player.sp >= 5) {
-      return this.callDoubleMovementSpecial()
+    if (player.sp >= 25) {
+      return this.callThreeStepsSpecial()
+    } else if (player.sp >= 15) {
+      return this.callTwoStepsSpecial()
     }
 
     let flags = publicData.flags
@@ -23,9 +25,15 @@ export default class CloserFlagRobot extends FirstFlagRobot {
     return this.goto(player, flags[0])
   }
 
-  callDoubleMovementSpecial() {
+  callThreeStepsSpecial() {
     return {
-      type: 'DoubleMovementSpecial'
+      type: 'ThreeStepsSpecial'
+    }
+  }
+
+  callTwoStepsSpecial() {
+    return {
+      type: 'TwoStepsSpecial'
     }
   }
 

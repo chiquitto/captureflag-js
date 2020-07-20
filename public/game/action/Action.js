@@ -3,6 +3,7 @@
  * @typedef {Object} ActionArgs
  * @property {Stage} stage - The stage of game
  * @property {Player} player
+ * @property {PlayerTurn} playerTurn
  * @property {Flag[]} flags
  * @property {Player[]} players
  * @property {Object} options

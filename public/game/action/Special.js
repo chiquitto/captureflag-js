@@ -9,7 +9,7 @@ export default class Special extends Action {
 
   testBeforeApply(args) {
     if (args.player.specialPoints < this.cost) {
-      throw new InvalidCallSpecialError('InvalidCallSpecialError')
+      throw new InvalidCallSpecialError(`InvalidCallSpecialError ${this.constructor.name}`)
     }
   }
 

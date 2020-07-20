@@ -10,6 +10,7 @@ import createSpecialFlag, {SpecialFlag} from "./model/SpecialFlag.js"
 import GameConfig from "./GameConfig.js"
 import ActionFactory from "./action/ActionFactory.js"
 import createDispatcher, {Dispatcher} from "./dispatch/Dispatcher.js"
+import PlayerTurn from "./PlayerTurn.js";
 
 class Game {
   #displays = []
@@ -24,14 +25,17 @@ class Game {
 
   // control the game
   #canNextTurn
-  #playerTurn = 0
-  #playerSize = 2
-  #flagSize = 1
-  #maxFlags = 5
+  #playerToPlay = 0
+  #playerTurn
   #interval
   #winner = null
   #finished = null
-  #turn = 0
+  #turn = 0 // number of turns
+
+  // config
+  #playerSize = 2
+  #flagSize = 1
+  #maxFlags = 5
 
   /**
    *
@@ -135,15 +139,9 @@ class Game {
     this.#canNextTurn = false
     this.#turn++
 
-    const playerNumber = this.playerTurnRotate()
+    const playerTurn = this.getPlayerTurn()
 
-    const turnValues = new TurnValues()
-    turnValues.player = this.#players[playerNumber]
-    turnValues.playerNumber = playerNumber
-    turnValues.stepSize = 1
-    turnValues.turn = this.#turn
-
-    const p = Promise.resolve(turnValues)
+    const p = Promise.resolve(playerTurn)
       .then(this.runTestFlags())
       .then(this.runPlayerAction())
       .then(this.runTestFlagCapture())
@@ -161,17 +159,20 @@ class Game {
   runPlayerPosAction() {
     /**
      *
-     * @param {TurnValues} turnValues
-     * @returns {TurnValues}
+     * @param {PlayerTurn} playerTurn
+     * @returns {PlayerTurn}
      */
-    const f = turnValues => {
-      turnValues.player.turns++
+    const f = playerTurn => {
+      playerTurn.player.turns++
 
-      if (turnValues.player.turns % 5 == 0) {
-        turnValues.player.specialPoints += 3
+      if (playerTurn.player.turns % 5 == 0) {
+        playerTurn.player.specialPoints += 3
       }
 
-      return turnValues
+      playerTurn.stepsPassed++
+      playerTurn.stepsLeft--
+
+      return playerTurn
     }
     return f
   }
@@ -179,12 +180,12 @@ class Game {
   runDraw() {
     /**
      *
-     * @param {TurnValues} turnValues
-     * @returns {TurnValues}
+     * @param {PlayerTurn} playerTurn
+     * @returns {PlayerTurn}
      */
-    const f = turnValues => {
+    const f = playerTurn => {
       this.draw()
-      return turnValues
+      return playerTurn
     }
     return f
   }
@@ -192,18 +193,18 @@ class Game {
   runPlayerAction() {
     /**
      *
-     * @param {TurnValues} turnValues
-     * @returns {Promise<TurnValues>|TurnValues}
+     * @param {PlayerTurn} playerTurn
+     * @returns {Promise<PlayerTurn>|PlayerTurn}
      */
-    const f = turnValues => {
+    const f = playerTurn => {
 
       if (this.#dispatcher == null) {
         throw new Error('Dispatcher isnt defined')
-        return turnValues
+        return playerTurn
       }
 
-      let action = this.#dispatcher.captureAction(turnValues.player,
-        this.generatePublicData(turnValues))
+      let action = this.#dispatcher.captureAction(playerTurn.player,
+        this.generatePublicData(playerTurn))
 
       if (!(action instanceof Promise)) {
         action = Promise.resolve(action)
@@ -217,11 +218,12 @@ class Game {
 
         const privateData = {
           stage: this.#stage,
-          player: turnValues.player,
+          player: playerTurn.player,
+          playerTurn: playerTurn,
           flags: this.#flags,
           players: this.#players,
           options: {
-            stepSize: turnValues.stepSize
+            stepSize: playerTurn.stepSize
           }
         }
 
@@ -230,8 +232,12 @@ class Game {
           action.apply(privateData)
         }
 
-        return turnValues
+        return playerTurn
       })
+        .catch(err => {
+          console.error(err)
+          return playerTurn
+        })
     }
     return f
   }
@@ -239,13 +245,13 @@ class Game {
   runDelay() {
     /**
      *
-     * @param {TurnValues} turnValues
-     * @returns {Promise<TurnValues>}
+     * @param {PlayerTurn} playerTurn
+     * @returns {Promise<PlayerTurn>}
      */
-    const f = turnValues => {
+    const f = playerTurn => {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          resolve(turnValues)
+          resolve(playerTurn)
         }, 0)
       })
     }
@@ -255,10 +261,10 @@ class Game {
   runTestFinish() {
     /**
      *
-     * @param {TurnValues} turnValues
-     * @returns {TurnValues}
+     * @param {PlayerTurn} playerTurn
+     * @returns {PlayerTurn}
      */
-    const f = turnValues => {
+    const f = playerTurn => {
       for (let player of this.#players) {
         if (player.score >= 50) {
           this.#finished = true
@@ -276,7 +282,7 @@ class Game {
           .reduce((max, p) => p.score > max.score ? p : max)
       }
 
-      return turnValues
+      return playerTurn
     }
     return f
   }
@@ -284,11 +290,11 @@ class Game {
   runTestFlagCapture() {
     /**
      *
-     * @param {TurnValues} turnValues
-     * @returns {TurnValues}
+     * @param {PlayerTurn} playerTurn
+     * @returns {PlayerTurn}
      */
-    const f = turnValues => {
-      const player = turnValues.player
+    const f = playerTurn => {
+      const player = playerTurn.player
 
       const flags2Remove = []
       const length = this.#flags.length
@@ -312,7 +318,7 @@ class Game {
         this.addFlag()
       }
 
-      return turnValues
+      return playerTurn
     }
     return f
   }
@@ -320,14 +326,14 @@ class Game {
   runTestFlags() {
     /**
      *
-     * @param {TurnValues} turnValues
-     * @returns {TurnValues}
+     * @param {PlayerTurn} playerTurn
+     * @returns {PlayerTurn}
      */
-    const f = turnValues => {
+    const f = playerTurn => {
       if (this.#flags.length == 0) {
         this.addFlag()
       }
-      return turnValues
+      return playerTurn
     }
 
     return f
@@ -338,15 +344,39 @@ class Game {
     this.#stageHeight = height
   }
 
-  playerTurnRotate() {
-    if (this.#playerTurn >= this.#players.length) {
-      this.#playerTurn = 0
+  getPlayerTurn() {
+    if (this.#playerTurn == null) {
+      this.#playerTurn = this.createPlayerTurn()
+    } else if (this.#playerTurn.stepsLeft == 0) {
+      this.#playerToPlay++
+      this.#playerTurn = this.createPlayerTurn()
     }
-    return this.#playerTurn++
+    return this.#playerTurn
+  }
+
+  /**
+   *
+   * @returns {PlayerTurn}
+   */
+  createPlayerTurn() {
+    if (this.#playerToPlay >= this.#players.length) {
+      this.#playerToPlay = 0
+    }
+
+    const playerNumber = this.#playerToPlay
+
+    const playerTurn = new PlayerTurn()
+    playerTurn.player = this.#players[playerNumber]
+    playerTurn.playerNumber = playerNumber
+    playerTurn.stepSize = 1
+    playerTurn.stepsLeft = 1
+    playerTurn.stepsPassed = 0
+
+    return playerTurn
   }
 
   preparePlayers() {
-    this.#playerTurn = 0
+    this.#playerToPlay = 0
 
     for (let player of this.#players) {
       player.score = 0
@@ -378,7 +408,7 @@ class Game {
 
     this.#interval = setInterval(() => {
       this.nextTurn()
-    }, 200)
+    }, 300)
 
   }
 
@@ -482,6 +512,7 @@ class Game {
 
     const publicData = {
       game: {
+        turn: this.#turn,
         stepSize: args.stepSize
       },
       stage: {
@@ -508,61 +539,6 @@ class Game {
     if (!(this.#dispatcher instanceof Dispatcher)) {
       this.#dispatcher = createDispatcher()
     }
-  }
-}
-
-class TurnValues {
-  #player
-  #playerNumber
-  #stepSize
-  #turn
-
-  /**
-   *
-   * @returns {Player}
-   */
-  get player() {
-    return this.#player;
-  }
-
-  set player(value) {
-    this.#player = value;
-  }
-
-  /**
-   *
-   * @returns {number}
-   */
-  get playerNumber() {
-    return this.#playerNumber;
-  }
-
-  set playerNumber(value) {
-    this.#playerNumber = value;
-  }
-
-  /**
-   *
-   * @returns {number}
-   */
-  get stepSize() {
-    return this.#stepSize;
-  }
-
-  set stepSize(value) {
-    this.#stepSize = value;
-  }
-
-  /**
-   *
-   * @returns {number}
-   */
-  get turn() {
-    return this.#turn;
-  }
-
-  set turn(value) {
-    this.#turn = value;
   }
 }
 

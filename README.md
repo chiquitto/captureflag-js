@@ -6,10 +6,10 @@ A game to capture the flags before the enemy. You can use a robot to control you
 
 - [x] Special points (SP) - Add +3 SP for every 5 steps
 - [ ] Add special movements
-  - [ ] Double movement (25 SP)
-  - [ ] Triple movement (60 SP)
-  - [ ] Pushing an enemy back
-  - [ ] Remove a flag
+  - [x] Two steps (cost: 15)
+  - [x] Three steps (cost: 25)
+  - [ ] Pushing an enemy back (cost: 50)
+  - [ ] Remove a flag (cost: 30)
   - [ ] Convert a flag point to special point (cost: 50)
 - [x] Multiple flags
 - [x] Flags with different points (colors)
