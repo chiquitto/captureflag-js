@@ -1,5 +1,15 @@
 export default class Action {
 
+  #gamepadArgs
+
+  constructor(gamepadArgs) {
+    this.#gamepadArgs = gamepadArgs
+  }
+
+  get gamepadArgs() {
+    return this.#gamepadArgs
+  }
+
   /**
    *
    * @param {GameState} gameState
@@ -13,13 +23,21 @@ export default class Action {
    *
    * @param {GameState} gameState
    */
+
+  applyAfter(gameState) {
+  }
+
+  /**
+   *
+   * @param {GameState} gameState
+   */
   subApply(gameState) {
     throw new Error('Action.subApply not implemented')
   }
 
   /**
    *
-   * @param {GameState} args
+   * @param {GameState} gameState
    */
   testBeforeApply(gameState) {
     throw new Error('Action.testBeforeApply not implemented')

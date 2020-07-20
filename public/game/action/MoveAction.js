@@ -2,6 +2,10 @@ import Action from "./Action.js"
 
 export default class MoveAction extends Action {
 
+  applyAfter(gameState) {
+    gameState.roundState.stepsLeft--
+  }
+
   /**
    *
    * @param {Rectangle} rectangle

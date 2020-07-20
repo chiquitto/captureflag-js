@@ -102,7 +102,6 @@ class Game {
       }
 
       roundState.stepsPassed++
-      roundState.stepsLeft--
 
       return roundState
     }
@@ -135,31 +134,37 @@ class Game {
         return roundState
       }
 
-      let action = this.#dispatcher.captureAction(roundState.player,
+      let gamepadAction = this.#dispatcher.captureAction(roundState.player,
         this.#state.getPublicData())
 
-      if (!(action instanceof Promise)) {
-        action = Promise.resolve(action)
+      if (!(gamepadAction instanceof Promise)) {
+        gamepadAction = Promise.resolve(gamepadAction)
       }
 
-      return action.then((actionArgs) => {
+      let action
+      return gamepadAction.then((gamepadArgs) => {
 
-        if ((typeof actionArgs == "string") || (actionArgs instanceof String)) {
-          actionArgs = {type: actionArgs}
+        if ((typeof gamepadArgs == "string") || (gamepadArgs instanceof String)) {
+          gamepadArgs = {type: gamepadArgs}
         }
 
-        let action = ActionFactory.factory(actionArgs)
+        action = ActionFactory.factory(gamepadArgs)
         if (action !== null) {
           action.apply(this.#state)
         }
 
-        return roundState
+        return 1
       })
         .catch(err => {
           console.error(err)
+          return 2
+        })
+        .then(_ => {
+          action.applyAfter(this.#state)
           return roundState
         })
     }
+
     return f
   }
 

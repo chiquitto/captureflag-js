@@ -4,27 +4,30 @@ import MoveLeftAction from "./MoveLeftAction.js"
 import MoveRightAction from "./MoveRightAction.js"
 import createTwoStepsSpecial from "./TwoStepsSpecial.js"
 import createThreeStepsSpecial from "./ThreeStepsSpecial.js"
+import createRemoveFlagSpecial from "./RemoveFlagSpecial.js"
 
 export default class ActionFactory {
 
-  static factory(args) {
-    if ((!(args instanceof Object)) || (!args.hasOwnProperty('type'))) {
+  static factory(gamepadArgs) {
+    if ((!(gamepadArgs instanceof Object)) || (!gamepadArgs.hasOwnProperty('type'))) {
       return null
     }
 
-    switch (args.type) {
+    switch (gamepadArgs.type) {
+      case 'RemoveFlagSpecial':
+        return createRemoveFlagSpecial(gamepadArgs)
       case 'TwoStepsSpecial':
-        return createTwoStepsSpecial(args)
+        return createTwoStepsSpecial(gamepadArgs)
       case 'ThreeStepsSpecial':
-        return createThreeStepsSpecial(args)
+        return createThreeStepsSpecial(gamepadArgs)
       case 'UP':
-        return new MoveUpAction(args)
+        return new MoveUpAction(gamepadArgs)
       case 'RIGHT':
-        return new MoveRightAction(args)
+        return new MoveRightAction(gamepadArgs)
       case 'DOWN':
-        return new MoveDownAction(args)
+        return new MoveDownAction(gamepadArgs)
       case 'LEFT':
-        return new MoveLeftAction(args)
+        return new MoveLeftAction(gamepadArgs)
     }
 
     return null

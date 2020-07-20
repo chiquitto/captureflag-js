@@ -2,11 +2,10 @@ import {randomInteger, randomValue} from "./util.js"
 import createFlag from "./model/Flag.js"
 import createRectangle from "./model/Rectangle.js"
 import GameConfig from "./GameConfig.js"
-import createSpecialFlag from "./model/SpecialFlag.js"
+import createSpecialFlag, {SpecialFlag} from "./model/SpecialFlag.js"
 import createStage from "./model/Stage.js"
 import createPlayer from "./model/Player.js"
 import RoundState from "./RoundState.js"
-import {SpecialFlag} from "./model/SpecialFlag.js"
 
 /**
  *
@@ -248,9 +247,11 @@ class GameState {
     }
 
     const publicData = {
-      game: {
+      round: {
         roundNumber: this.roundNumber,
-        stepSize: this.#roundState.stepSize
+        stepSize: this.#roundState.stepSize,
+        stepsPassed: this.#roundState.stepsPassed,
+        stepsLeft: this.#roundState.stepsLeft
       },
       stage: {
         width: this.#stageWidth,
