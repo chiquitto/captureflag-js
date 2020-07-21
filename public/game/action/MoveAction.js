@@ -1,4 +1,5 @@
 import Action from "./Action.js"
+import PlayerCollisionError from "../exceptions/PlayerCollisionError.js"
 
 export default class MoveAction extends Action {
 
@@ -33,7 +34,7 @@ export default class MoveAction extends Action {
       }
 
       if (rectangle.detectCollision(aux.polygon)) {
-        throw new Error('Invalid action: Player collision')
+        throw new PlayerCollisionError('Player collision')
       }
     }
   }

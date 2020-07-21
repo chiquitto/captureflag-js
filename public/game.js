@@ -30,4 +30,4 @@ game.setStageSize(20, 20)
 game.addCanvasDisplay(document.getElementById('stage1'))
 
 game.start()
-console.log(game)
+// console.log(game)
