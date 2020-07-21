@@ -6,6 +6,7 @@ import createSpecialFlag, {SpecialFlag} from "./model/SpecialFlag.js"
 import createStage from "./model/Stage.js"
 import createPlayer from "./model/Player.js"
 import RoundState from "./RoundState.js"
+import Polygon from "./model/Polygon.js"
 
 /**
  *
@@ -116,6 +117,15 @@ class GameState {
 
   /**
    *
+   * @param {Polygon} polygon
+   * @returns {*|number}
+   */
+  addSpecialFlag(polygon) {
+    return this.#flags.push(this.createFlagSpecialPoint(polygon))
+  }
+
+  /**
+   *
    * @returns {RoundState}
    */
   createRoundState() {
@@ -210,16 +220,21 @@ class GameState {
 
   /**
    *
+   * @param {Polygon} polygon
    * @returns {SpecialFlag}
    */
-  createFlagSpecialPoint() {
+  createFlagSpecialPoint(polygon) {
+    if ((polygon == undefined) || (!(polygon instanceof Polygon))) {
+      polygon = createRectangle(
+        0,
+        0,
+        this.#flagSize,
+        this.#flagSize
+      )
+    }
+
     const points = randomInteger(1, GameConfig.playerMaxSpecialPoints / 10) * 10
-    return createSpecialFlag(points, '#CCCCCC', createRectangle(
-      0,
-      0,
-      this.#flagSize,
-      this.#flagSize
-    ))
+    return createSpecialFlag(points, '#CCCCCC', polygon)
   }
 
   getPublicData() {
@@ -338,7 +353,7 @@ class GameState {
    * @param {number} pos
    */
   removeFlag(pos) {
-    this.#flags.splice(pos, 1)
+    return this.#flags.splice(pos, 1)
   }
 
 }

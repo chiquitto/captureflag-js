@@ -5,7 +5,9 @@ export default class CloserFlagRobot extends FirstFlagRobot {
   action(publicData) {
     const player = publicData.player
 
-    if (player.sp >= 30) {
+    if (player.sp >= 50) {
+      return this.callConvertToSpecialFlag()
+    } else if (player.sp >= 30) {
       return this.callRemoveFlagSpecial()
     } else if (player.sp >= 25) {
       return this.callThreeStepsSpecial()
@@ -25,25 +27,6 @@ export default class CloserFlagRobot extends FirstFlagRobot {
       })
 
     return this.goto(player, flags[0])
-  }
-
-  callThreeStepsSpecial() {
-    return {
-      type: 'ThreeStepsSpecial'
-    }
-  }
-
-  callTwoStepsSpecial() {
-    return {
-      type: 'TwoStepsSpecial'
-    }
-  }
-
-  callRemoveFlagSpecial() {
-    return {
-      type: 'RemoveFlagSpecial',
-      number: 0
-    }
   }
 
   get color() {

@@ -35,4 +35,30 @@ export default class FirstFlagRobot {
 
     return {type}
   }
+
+  callThreeStepsSpecial() {
+    return {
+      type: 'ThreeStepsSpecial'
+    }
+  }
+
+  callTwoStepsSpecial() {
+    return {
+      type: 'TwoStepsSpecial'
+    }
+  }
+
+  callRemoveFlagSpecial() {
+    return {
+      type: 'RemoveFlagSpecial',
+      number: 0
+    }
+  }
+
+  callConvertToSpecialFlag() {
+    return {
+      type: 'ConvertToSpecialFlag',
+      number: 0
+    }
+  }
 }
