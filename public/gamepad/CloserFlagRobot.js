@@ -13,6 +13,8 @@ export default class CloserFlagRobot extends FirstFlagRobot {
       return this.callThreeStepsSpecial()
     } else if (player.sp >= 15) {
       return this.callTwoStepsSpecial()
+    } else if (player.sp >= 5) {
+      return this.callPushBackSpecial(1, Math.floor(player.sp / 5))
     }
 
     let flags = publicData.flags

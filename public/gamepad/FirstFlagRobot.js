@@ -61,4 +61,12 @@ export default class FirstFlagRobot {
       number: 0
     }
   }
+
+  callPushBackSpecial(playerNumber, push) {
+    return {
+      type: 'PushBackSpecial',
+      number: playerNumber,
+      push: push
+    }
+  }
 }

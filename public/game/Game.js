@@ -160,7 +160,9 @@ class Game {
           return 2
         })
         .then(_ => {
-          action.applyAfter(this.#state)
+          if (action !== null) {
+            action.applyAfter(this.#state)
+          }
           return roundState
         })
     }

@@ -6,6 +6,7 @@ import createTwoStepsSpecial from "./TwoStepsSpecial.js"
 import createThreeStepsSpecial from "./ThreeStepsSpecial.js"
 import createRemoveFlagSpecial from "./RemoveFlagSpecial.js"
 import createConvertToSpecialFlag from "./ConvertToSpecialFlag.js"
+import createPushBackSpecial from "./PushBackSpecial.js"
 
 export default class ActionFactory {
 
@@ -15,6 +16,8 @@ export default class ActionFactory {
     }
 
     switch (gamepadArgs.type) {
+      case 'PushBackSpecial':
+        return createPushBackSpecial(gamepadArgs)
       case 'ConvertToSpecialFlag':
         return createConvertToSpecialFlag(gamepadArgs)
       case 'RemoveFlagSpecial':
